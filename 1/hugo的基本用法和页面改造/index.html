@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="王建伟">
+  
+  
+  
+  
+  <link rel="next" href="https://wjw66.github.io/2019/jdk%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E9%A1%BA%E5%BA%8F/" />
+  <link rel="canonical" href="https://wjw66.github.io/1/hugo%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E9%A1%B5%E9%9D%A2%E6%94%B9%E9%80%A0/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Hugo的基本用法和页面改造 | 首页
+       
+  </title>
+  <meta name="title" content="Hugo的基本用法和页面改造 | 首页">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/wjw66.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Hugo的基本用法和页面改造",
+    "headline" : "Hugo的基本用法和页面改造",
+    "description" : "概念 hugo是由Go语言实现的静态网站生成器。简单、易用、高效、易扩展、快速部署。\n主要用于个人Blog、项目文档、初创公司站点构建。\nhugo的下载安装很简单，可以参考官方的quickstart，本文主要介绍一下hugo框架的基本概念和工作原理。\n目录结构 命令：hugo new site blog\nblog ├── archetypes ├── config.toml ├── content ├── data ├── layouts ├── static ├── themes └── public archetypes  在通过命令窗口hugo new xxx 创建内容页面的时候，默认情况下hugo会创建date、title等front matter，可以通过在archetypes目录下创建文件，设置自定义的front matter。\nconfig.toml\n所有的hugo站点都有一个全局配置文件，用来配置整个站点的信息，hugo默认提供了跟多配置指令。\ncontent\n站点下所有的内容页面，也就是我们创建的md文件都在这个content目录下面。\ndata\ndata目录用来存储网站用到一些配置、数据文件。文件类型可以是yaml|toml|json等格式。\nlayouts\n存放用来渲染content目录下面内容的模版文件，模版.html格式结尾，layouts可以同时存储在项目目录和themes\/\/layouts目录下。\nstatic\n用来存储图片、css、js等静态资源文件。\nthemes\n用来存储主题，主题可以方便的帮助我们快速建立站点，也可以方便的切换网站的风格样式。\npublic\nhugo编译后生成网站的所有文件都存储在这里面，把这个目录放到任意web服务器就可以发布网站成功。\n页面绑定 Page bundles** hugo中的内容组织是依赖Page Bundles来管理的。Page Bundles包括Leaf Bundle（没有子节点）和Branch Bundle（home page, section, taxonomy terms, taxonomy list）两类。\nLeaf Bundle Branch Bundle 索引文件 index.md _index.md 布局类型 single list 嵌套 不允许嵌套 允许Leaf或Branch Bundle嵌套 Section section是基于content\/目录下的组织结构定义的页面集合。",
+    "inLanguage" : "en-us",
+    "author" : "王建伟",
+    "creator" : "王建伟",
+    "publisher": "王建伟",
+    "accountablePerson" : "王建伟",
+    "copyrightHolder" : "王建伟",
+    "copyrightYear" : "0001",
+    "datePublished": "0001-01-01 00:00:00 \x2b0000 UTC",
+    "dateModified" : "0001-01-01 00:00:00 \x2b0000 UTC",
+    "url" : "https:\/\/wjw66.github.io\/1\/hugo%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E9%A1%B5%E9%9D%A2%E6%94%B9%E9%80%A0\/",
+    "wordCount" : "378",
+    "keywords" : [ "博客", "首页"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Hugo的基本用法和页面改造</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://wjw66.github.io/" rel="author">王建伟</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=0001-01-01 itemprop="datePublished">January 1, 0001</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://wjw66.github.io/categories/%E5%88%9B%E5%BB%BA%E5%92%8C%E6%94%B9%E9%80%A0%E5%8D%9A%E5%AE%A2/"> 创建和改造博客 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="概念">概念</h3>
+
+<p>hugo是由Go语言实现的静态网站生成器。简单、易用、高效、易扩展、快速部署。</p>
+
+<p>主要用于个人Blog、项目文档、初创公司站点构建。</p>
+
+<p>hugo的下载安装很简单，可以参考官方的quickstart，本文主要介绍一下hugo框架的基本概念和工作原理。</p>
+
+<h3 id="目录结构">目录结构</h3>
+
+<p>命令：hugo new site blog</p>
+
+<pre><code>blog
+├── archetypes
+├── config.toml
+├── content
+├── data
+├── layouts
+├── static
+├── themes
+└── public
+archetypes
+</code></pre>
+
+<p>在通过命令窗口hugo new xxx 创建内容页面的时候，默认情况下hugo会创建date、title等front matter，可以通过在archetypes目录下创建文件，设置自定义的front matter。</p>
+
+<p><strong>config.toml</strong></p>
+
+<p>所有的hugo站点都有一个全局配置文件，用来配置整个站点的信息，hugo默认提供了跟多配置指令。</p>
+
+<p><strong>content</strong></p>
+
+<p>站点下所有的内容页面，也就是我们创建的md文件都在这个content目录下面。</p>
+
+<p><strong>data</strong></p>
+
+<p>data目录用来存储网站用到一些配置、数据文件。文件类型可以是yaml|toml|json等格式。</p>
+
+<p><strong>layouts</strong></p>
+
+<p>存放用来渲染content目录下面内容的模版文件，模版.html格式结尾，layouts可以同时存储在项目目录和themes/<THEME>/layouts目录下。</p>
+
+<p><strong>static</strong></p>
+
+<p>用来存储图片、css、js等静态资源文件。</p>
+
+<p><strong>themes</strong></p>
+
+<p>用来存储主题，主题可以方便的帮助我们快速建立站点，也可以方便的切换网站的风格样式。</p>
+
+<p><strong>public</strong></p>
+
+<p>hugo编译后生成网站的所有文件都存储在这里面，把这个目录放到任意web服务器就可以发布网站成功。</p>
+
+<h3 id="页面绑定">页面绑定</h3>
+
+<p>Page bundles**
+hugo中的内容组织是依赖Page Bundles来管理的。Page Bundles包括Leaf Bundle（没有子节点）和Branch Bundle（home page, section, taxonomy terms, taxonomy list）两类。</p>
+
+<p>Leaf Bundle Branch Bundle
+索引文件    index.md    _index.md
+布局类型    single  list
+嵌套  不允许嵌套   允许Leaf或Branch Bundle嵌套
+Section
+section是基于content/目录下的组织结构定义的页面集合。</p>
+
+<p>content/ 下的第一级子目录都是一个section。如果想让一个子目录成为section，需要在目录下面定义_index.md文件。 所有的section构成一个section tree。</p>
+
+<pre><code>content
+└── blog        &lt;-- Section, 因为是content的子目录
+    ├── funny-cats
+    │   ├── mypost.md
+    │   └── kittens         &lt;-- Section, 因为包含_index.md
+    │       └── _index.md
+    └── tech                &lt;-- Section, 因为包含 _index.md
+        └── _index.md
+</code></pre>
+
+<p>如果section tree 需要可导航，至少最底层的部分需要定义一个_index.md文件。</p>
+
+<p><strong>front matter</strong>
+front matter 用来配置文章的标题、时间、链接、分类等元信息，提供给模板调用</p>
+
+<pre><code>+++
+title = &quot;post title&quot;
+description = &quot;description.&quot;
+date = &quot;2018-08-20&quot;
+tags = [ &quot;tag1&quot;, &quot;tag2&quot;, &quot;tag3&quot;]
+categories = [&quot;cat1&quot;,&quot;cat2&quot;]
+weight = 20
++++
+</code></pre>
+
+<h3 id="模版">模版</h3>
+
+<p>Hugo以go语言的html/template库作为模版引擎，将内容通过template渲染成html，模版作为内容和显示视图之间的桥梁。</p>
+
+<p><strong>hugo由三种类型的模版</strong>：single、list and partial。</p>
+
+<p>Hugo有一套自己的模版查找机制，如果找不到与内容完全匹配的模板，它将向上移动一级并从那里搜索。直到找到匹配的模板或用完模板来尝试。如果找不到模板，它将使用该站点的默认模板。</p>
+
+<p><strong>Single Template</strong>
+single template 用于渲染页面内容。</p>
+
+<p><strong>List Template</strong>
+list template 用于渲染一组相关内容，例如一个站点下所有内容，一个目录下的内容；</p>
+
+<p>homepage 也就是_index.md，是一个特殊类型的list template，homepage实际上就是一个站点所有内容的入口。</p>
+
+<p><strong>partial Template</strong>
+partial template 可以被其他模版引用，实际上可以理解为模版级别的组件，例如页面头部、页面底部等。</p>
+
+<p><strong>基础模版查询规则</strong>
+基本模版是指baseof.html的查找规则</p>
+
+<pre><code>1. /layouts/section/&lt;TYPE&gt;-baseof.html
+2. /themes/&lt;THEME&gt;/layouts/section/&lt;TYPE&gt;-baseof.html
+3. /layouts/&lt;TYPE&gt;/baseof.html
+4. /themes/&lt;THEME&gt;/layouts/&lt;TYPE&gt;/baseof.html
+5. /layouts/section/baseof.html
+6. /themes/&lt;THEME&gt;/layouts/section/baseof.html
+7. /layouts/_default/&lt;TYPE&gt;-baseof.html
+8. /themes/&lt;THEME&gt;/layouts/_default/&lt;TYPE&gt;-baseof.html
+9. /layouts/_default/baseof.html
+10. /themes/&lt;THEME&gt;/layouts/_default/baseof.html
+</code></pre>
+
+<p><strong>页面模版查询规则</strong>
+kind
+判断页面是single page 还是 list page？</p>
+
+<p>如果是single page，会选择模版_default/single.html</p>
+
+<p>如果是list page（section listings, home page, taxonomy lists, taxonomy terms），会选择模版_default/list.html</p>
+
+<p><strong>Output Format</strong>
+根据输出格式的名称和后缀，选择匹配的模版。例如输出格式是rss，后缀是.html,首先看有没有匹配的index.rss.html格式的模版。</p>
+
+<p><strong>Language</strong>
+根据站点设置的语言选择匹配的模版，比如，站点的语言为fr，模版匹配的优先级是：index.fr.amp.html &gt; index.amp.html &gt; index.fr.html</p>
+
+<p><strong>Layout</strong>
+可以在页面头部设置front matter：layout，设置页面用指定的模版进行渲染，例如，页面在目录posts（默认section）下面，layout=custom，查找规则如下：</p>
+
+<pre><code>layouts/posts/custom.html
+layouts/posts/single.html
+layouts/_default/custom.html
+layouts/_default/single.html
+</code></pre>
+
+<p><strong>type</strong>
+如果在页面的头部设置了属性type属性，例如type=event，查找规则如下：</p>
+
+<pre><code>layouts/event/custom.html
+layouts/event/single.html
+layouts/events/single.html
+layouts/_default/single.html
+</code></pre>
+
+<h3 id="语法">语法</h3>
+
+<p><strong>基础语法</strong>
+go-template 基础语法</p>
+
+<p><strong>block</strong>
+在父模版中通过{{ block &ldquo;xxx&rdquo;}} 定义一个块，在子模块中可以通过{{define &ldquo;xxx&rdquo;}} 定义的内容进行替换。</p>
+
+<pre><code>{{ define &quot;chrome/header.html&quot; }}
+  &lt;div&gt;{{ .Site.Params.author}}&lt;/div&gt;
+{{ end }}
+</code></pre>
+
+<p><strong>模版引用</strong></p>
+
+<p><strong>方法一 ：partial（推荐使用）</strong></p>
+
+<p>用于引入定义的局部模版，局部模版位置必须在themes/layouts/partials 或者layouts/partials目录下。</p>
+
+<pre><code class="language-{">}```
+**方法二 ：template**
+
+template 在一些比较老的版本中用于引入定义的局部模版，现在在内部模版中仍然使用。
+
+</code></pre>
+
+<p>{{ template &ldquo;chrome/header.html&rdquo; . }}
+{{- xxx -}}</p>
+
+<pre><code>-用于去除空格，例如：
+
+{{- xxx}用于去除{{- 前边的空格
+{{ xxx -}用于去除-}}后边的空格
+{{- xxx -}}用于去除两边的空格
+**Paginator**
+.Paginator主要用来构建菜单，只能在homePage、listPage中使用。
+</code></pre>
+
+<p>{{ range .Paginator.Pages }}
+   {{ .Title }}
+{{ end }}</p>
+
+<pre><code>**短代码**
+短代码（shortcodes）相当于一些自定义模版，通过在md文档中引用，生成代码片段，类似于一些js框架中的组件。
+
+短代码必须在themes/layouts/partials 或者layouts/partials目录下定义。
+
+短代码在模版文件中引用是无效的，只能在content目录下的*.md文件中引用。
+
+引用方式
+</code></pre>
+
+<p>{{% msshortcodes params1=&ldquo;xxx&rdquo; %}}<strong>this</strong> is a text{{% /msshortcodes %}}
+{{&lt; msshortcodes params1=&ldquo;xxx&rdquo;  &gt;}} <strong>Yeahhh !</strong> is a text {{&lt; /msshortcodes &gt;}}</p>
+
+<pre><code>% 代表短代码中的内容需要进一步渲染
+&lt; 代表短代码中间的内容项不需要进一步渲染
+**taxonomy**
+hugo中通过taxonomy来实现用户对内容的分组。taxonomy需要在站点配置文件中定义：
+</code></pre>
+
+<p>[taxonomies]
+  category = &ldquo;categories&rdquo;
+  tag = &ldquo;tags&rdquo;
+  series = &ldquo;series&rdquo;</p>
+
+<pre><code>默认情况下，hugo提供了category、tag两个分类，不需要用户在配置文件中定义，但如果还有其他的taxonomy定义，则默认的tag、category也需要定义；
+
+**使用方式**
+
+在站点配置文件中添加taxonomy,例如：series
+定义taxonomy list template；例如，在layouts/taxonomy/series.html
+在内容文件的front matter中设置term；例如，series = [&quot;s1&quot;,&quot;s2&quot;]
+访问taxonomy列表，例如，localhost:1313/series/s1
+变量
+Hugo提供了很多不同类型变量用于创建模版，构建站点。
+
+**Site**
+大部分站点变量定义在站点配置文件中（config.[yaml|toml|json] ）
+</code></pre>
+
+<p>.Site.Menus:站点下的所有菜单</p>
+
+<p>.Site.Pages:站点下的所有页面</p>
+
+<p>.Site.Params: 站点下的参数</p>
+
+<pre><code>**Page**
+页面级参数都定义在页面头部的front matter中，例如：
+</code></pre>
+
+<p>+++
+title = &ldquo;Hugo&rdquo;
+date = 2018-08-13T18:29:20+08:00
+description = &ldquo;&rdquo;
+draft = false
+weight = 10
++++</p>
+
+<pre><code>使用方式
+</code></pre>
+
+<p>{{ .Params.xxx }} 或者是 {{ .Site.Params.xxx }}```</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>王建伟 </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://wjw66.github.io/1/hugo%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E9%A1%B5%E9%9D%A2%E6%94%B9%E9%80%A0/>https://wjw66.github.io/1/hugo%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E9%A1%B5%E9%9D%A2%E6%94%B9%E9%80%A0/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/%E5%8D%9A%E5%AE%A2/">
+                    #博客</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://wjw66.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+         
+        
+        <a href="https://wjw66.github.io/2019/jdk%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E9%A1%BA%E5%BA%8F/" class="next" rel="next" title="JDK源码阅读顺序">JDK源码阅读顺序&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://wjw66.github.io/">王建伟</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

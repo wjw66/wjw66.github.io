@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>博客 on 首页</title>
+    <link>https://wjw66.github.io/tags/%E5%8D%9A%E5%AE%A2/</link>
+    <description>Recent content in 博客 on 首页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://wjw66.github.io/tags/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hugo的基本用法和页面改造</title>
+      <link>https://wjw66.github.io/1/hugo%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E9%A1%B5%E9%9D%A2%E6%94%B9%E9%80%A0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://wjw66.github.io/1/hugo%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E9%A1%B5%E9%9D%A2%E6%94%B9%E9%80%A0/</guid>
+      <description>概念 hugo是由Go语言实现的静态网站生成器。简单、易用、高效、易扩展、快速部署。
+主要用于个人Blog、项目文档、初创公司站点构建。
+hugo的下载安装很简单，可以参考官方的quickstart，本文主要介绍一下hugo框架的基本概念和工作原理。
+目录结构 命令：hugo new site blog
+blog ├── archetypes ├── config.toml ├── content ├── data ├── layouts ├── static ├── themes └── public archetypes  在通过命令窗口hugo new xxx 创建内容页面的时候，默认情况下hugo会创建date、title等front matter，可以通过在archetypes目录下创建文件，设置自定义的front matter。
+config.toml
+所有的hugo站点都有一个全局配置文件，用来配置整个站点的信息，hugo默认提供了跟多配置指令。
+content
+站点下所有的内容页面，也就是我们创建的md文件都在这个content目录下面。
+data
+data目录用来存储网站用到一些配置、数据文件。文件类型可以是yaml|toml|json等格式。
+layouts
+存放用来渲染content目录下面内容的模版文件，模版.html格式结尾，layouts可以同时存储在项目目录和themes//layouts目录下。
+static
+用来存储图片、css、js等静态资源文件。
+themes
+用来存储主题，主题可以方便的帮助我们快速建立站点，也可以方便的切换网站的风格样式。
+public
+hugo编译后生成网站的所有文件都存储在这里面，把这个目录放到任意web服务器就可以发布网站成功。
+页面绑定 Page bundles** hugo中的内容组织是依赖Page Bundles来管理的。Page Bundles包括Leaf Bundle（没有子节点）和Branch Bundle（home page, section, taxonomy terms, taxonomy list）两类。
+Leaf Bundle Branch Bundle 索引文件 index.md _index.md 布局类型 single list 嵌套 不允许嵌套 允许Leaf或Branch Bundle嵌套 Section section是基于content/目录下的组织结构定义的页面集合。</description>
+    </item>
+    
+  </channel>
+</rss>

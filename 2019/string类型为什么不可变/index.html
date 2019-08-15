@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="王建伟">
+  
+  
+  
+  <link rel="prev" href="https://wjw66.github.io/2019/jdk%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E9%A1%BA%E5%BA%8F/" />
+  <link rel="next" href="https://wjw66.github.io/2019/idea%E5%A6%82%E4%BD%95%E5%AF%BC%E5%85%A5%E8%BF%90%E8%A1%8C%E5%B7%B2%E5%AE%8C%E6%88%90%E7%9A%84%E9%A1%B9%E7%9B%AE/" />
+  <link rel="canonical" href="https://wjw66.github.io/2019/string%E7%B1%BB%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           String类型为什么不可变 | 首页
+       
+  </title>
+  <meta name="title" content="String类型为什么不可变 | 首页">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/wjw66.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "String类型为什么不可变",
+    "headline" : "String类型为什么不可变",
+    "description" : "String类概述 java.lang.String类代表字符串。Java程序中所有的字符串文字（例如\x26rdquo;abc\x26rdquo; ）都可以被看作是实现此类的实例。 类 String 中包括用于检查各个字符串的方法，比如用于比较字符串，搜索字符串，提取子字符串以及创建具有翻译为大写或小写的所有字符的字符串的副本。\nString类特点  字符串不变：字符串的值在创建后不能被更改。\nString s1 = \x26quot;abc\x26quot;; s1 \x2b= \x26quot;d\x26quot;; System.out.println(s1); \/\/输出 \x26quot;abcd\x26quot;  说明: 内存中有\x26rdquo;abc\x26rdquo;，\x26rdquo;abcd\x26rdquo;两个对象，s1从指向\x26rdquo;abc\x26rdquo;，改变指向，指向了\x26rdquo;abcd\x26rdquo;；说明s1指向的内存地址改变了，但内存中\x26rdquo;abc\x26rdquo;对象依旧存在，只是在运算的时候又\x26rdquo;new\x26rdquo;了一个\x26rdquo;abcd\x26rdquo;对象。\n 因为String对象是不可变的（为什么不可变？下文会一一解惑），所以它们可以被共享。\nString s1 = \x26quot;abc\x26quot;; String s2 = \x26quot;abc\x26quot;; \/\/ 内存中只有一个\x26quot;abc\x26quot;对象被创建，同时被s1和s2共享。  \x26ldquo;abc\x26rdquo; 等效于 char[] data={ \x26lsquo;a\x26rsquo; , \x26lsquo;b\x26rsquo; , \x26lsquo;c\x26rsquo; } 。\n例如： String str = \x26quot;abc\x26quot;; 相当于： char data[] = {\x27a\x27, \x27b\x27, \x27c\x27}; String str = new String(data);  \x26ensp;\x26ensp;说明： String底层是靠字符数组char[]实现的。\n  String对象为什么是不可变的？ public final class String implements java.",
+    "inLanguage" : "en-us",
+    "author" : "王建伟",
+    "creator" : "王建伟",
+    "publisher": "王建伟",
+    "accountablePerson" : "王建伟",
+    "copyrightHolder" : "王建伟",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-08-14 23:22:58 \x2b0800 CST",
+    "dateModified" : "2019-08-14 23:22:58 \x2b0800 CST",
+    "url" : "https:\/\/wjw66.github.io\/2019\/string%E7%B1%BB%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98\/",
+    "wordCount" : "160",
+    "keywords" : [ "Java基础","面试题", "首页"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">String类型为什么不可变</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://wjw66.github.io/" rel="author">王建伟</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-08-14 itemprop="datePublished">August 14, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://wjw66.github.io/categories/java%E5%9F%BA%E7%A1%80/"> Java基础 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="string类概述">String类概述</h3>
+
+<p><code>java.lang.String</code>类代表字符串。Java程序中所有的字符串文字（例如&rdquo;abc&rdquo; ）都可以被看作是实现此类的实例。
+类 String 中包括用于检查各个字符串的方法，比如用于比较字符串，搜索字符串，提取子字符串以及创建具有翻译为大写或小写的所有字符的字符串的副本。</p>
+
+<h3 id="string类特点">String类特点</h3>
+
+<ol>
+<li><p>字符串不变：字符串的值在创建后不能被更改。</p>
+
+<pre><code class="language-java">String s1 = &quot;abc&quot;;
+s1 += &quot;d&quot;;
+System.out.println(s1); //输出 &quot;abcd&quot;
+</code></pre>
+
+<p><strong>说明:</strong> 内存中有&rdquo;abc&rdquo;，&rdquo;abcd&rdquo;两个对象，s1从指向&rdquo;abc&rdquo;，改变指向，指向了&rdquo;abcd&rdquo;；说明s1指向的内存地址改变了，但内存中&rdquo;abc&rdquo;对象依旧存在，只是在运算的时候又&rdquo;new&rdquo;了一个&rdquo;abcd&rdquo;对象。</p></li>
+
+<li><p>因为String对象是不可变的（为什么不可变？下文会一一解惑），所以它们可以被共享。</p>
+
+<pre><code class="language-java">String s1 = &quot;abc&quot;;
+String s2 = &quot;abc&quot;;
+// 内存中只有一个&quot;abc&quot;对象被创建，同时被s1和s2共享。
+</code></pre></li>
+
+<li><p>&ldquo;abc&rdquo; 等效于 char[] data={ &lsquo;a&rsquo; , &lsquo;b&rsquo; , &lsquo;c&rsquo; } 。</p>
+
+<pre><code class="language-java">例如：
+String str = &quot;abc&quot;;
+相当于：
+char data[] = {'a', 'b', 'c'};
+String str = new String(data);
+</code></pre>
+
+<p>&ensp;&ensp;<strong>说明：</strong> String底层是靠字符数组char[]实现的。</p></li>
+</ol>
+
+<h3 id="string对象为什么是不可变的">String对象为什么是不可变的？</h3>
+
+<pre><code class="language-java">public final class String
+    implements java.io.Serializable, Comparable&lt;string&gt;, CharSequence{
+    /** The value is used for character storage. */
+    private final char value[];
+ 
+    /** The offset is the first index of the storage that is used. */
+    private final int offset;
+ 
+    /** The count is the number of characters in the String. */
+    private final int count;
+ 
+    /** Cache the hash code for the string */
+    private int hash; // Default to 0&lt;/string&gt;
+</code></pre>
+
+<p>&ensp;&ensp;&ensp;&ensp;通过上面的String型代码我们不难看出String型的底层是<code>private final char value[];</code>等，并且是final修饰的，而final修饰的变量都是不可变的
+&ensp;&ensp;&ensp;&ensp;补充说明：value，offset和count这三个变量都是private的，并且没有提供setValue， setOffset和setCount等公共方法来修改这些值，所以在String类的外部无法修改String。也就是说一旦初始化就不能修改， 并且在String类的外部不能访问这三个成员。此外，value，offset和count这三个变量都是final的， 也就是说在String类内部，一旦这三个值初始化了， 也不能被改变。所以可以认为String对象是不可变的了。</p>
+
+<h3 id="string对象不可变有什么好处-也可视为不可变的原因">String对象不可变有什么好处？（也可视为不可变的原因）</h3>
+
+<ol>
+<li><p>不可变对象可以提高String Pool(字符串常量池)的效率和安全性。
+如果你知道一个对象是不可变动 ，那么需要拷贝的对象的内容时就不用复制它本身
+而是复制它的地址，复制地址(通常一个指针的大小)需要很小的内存，效率也很高。
+并且对于其他引用同一个对象的其他变量也不会造成影响。</p></li>
+
+<li><p>不变对象对于多线程是安全的，因为在多线程同事进行的情况下，一个可变对象的值很可能被其他线程改变这样会造成不可预期的结果，使用不可变对象就可以避免这种情况出现。</p></li>
+
+<li><p>如果字符串是可变的，那么会引起很严重的安全问题。譬如，数据库的用户名、密码都是以字符串的形式传入来获得数据库的连接，因为字符串是不可变的，所以它的值是不可改变的，否则黑客们可以钻到空子，改变字符 串指向的对象的值，造成安全漏洞。</p></li>
+
+<li><p>类加载器要用到字符串，不可变性提供了安全性，以便正确的类被加载。譬如你想加载java.sql.Connection类，而这个值被改成了myhacked.Connection，那么会对你的数据库造成
+不可知的破坏。</p></li>
+
+<li><p>因为字符串是不可变的，所以在它创建的时候hashcode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。</p></li>
+</ol>
+
+<p>总结：Java将String设成不可变最大的原因是效率和安全。</p>
+
+<p>问题：String类型不可变的好处和作用那么大，那么是否就不需要可变类型了呢？那有没有什么类型的字符串是可变的呢？
+答：当需要向字符串插入或修改的时候，Sting不可变类型就显得效率低且占用空间较大了，这时候就需要一个可变的字符串类型：StringBuffer。</p>
+
+<p>StringBuffer与String一样，都代表字符串，但是由于StringBuffer内部实现的方式和String不同，所以StringBuffer在处理字符串的时候不产生新的对象，在内存使用上要优于String类。
+StringBuffer也是对String类的一个补充。</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>王建伟 </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://wjw66.github.io/2019/string%E7%B1%BB%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98/>https://wjw66.github.io/2019/string%E7%B1%BB%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/java%E5%9F%BA%E7%A1%80/">
+                    #Java基础</a></span>
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/">
+                    #面试题</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://wjw66.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://wjw66.github.io/2019/jdk%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E9%A1%BA%E5%BA%8F/" class="prev" rel="prev" title="JDK源码阅读顺序"><i class="iconfont icon-left"></i>&nbsp;JDK源码阅读顺序</a>
+         
+        
+        <a href="https://wjw66.github.io/2019/idea%E5%A6%82%E4%BD%95%E5%AF%BC%E5%85%A5%E8%BF%90%E8%A1%8C%E5%B7%B2%E5%AE%8C%E6%88%90%E7%9A%84%E9%A1%B9%E7%9B%AE/" class="next" rel="next" title="IDEA如何导入运行已完成的项目">IDEA如何导入运行已完成的项目&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://wjw66.github.io/">王建伟</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

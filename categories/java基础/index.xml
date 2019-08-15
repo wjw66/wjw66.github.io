@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java基础 on 首页</title>
+    <link>https://wjw66.github.io/categories/java%E5%9F%BA%E7%A1%80/</link>
+    <description>Recent content in Java基础 on 首页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 14 Aug 2019 23:22:58 +0800</lastBuildDate>
+    
+	<atom:link href="https://wjw66.github.io/categories/java%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>String类型为什么不可变</title>
+      <link>https://wjw66.github.io/2019/string%E7%B1%BB%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98/</link>
+      <pubDate>Wed, 14 Aug 2019 23:22:58 +0800</pubDate>
+      
+      <guid>https://wjw66.github.io/2019/string%E7%B1%BB%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98/</guid>
+      <description>String类概述 java.lang.String类代表字符串。Java程序中所有的字符串文字（例如&amp;rdquo;abc&amp;rdquo; ）都可以被看作是实现此类的实例。 类 String 中包括用于检查各个字符串的方法，比如用于比较字符串，搜索字符串，提取子字符串以及创建具有翻译为大写或小写的所有字符的字符串的副本。
+String类特点  字符串不变：字符串的值在创建后不能被更改。
+String s1 = &amp;quot;abc&amp;quot;; s1 += &amp;quot;d&amp;quot;; System.out.println(s1); //输出 &amp;quot;abcd&amp;quot;  说明: 内存中有&amp;rdquo;abc&amp;rdquo;，&amp;rdquo;abcd&amp;rdquo;两个对象，s1从指向&amp;rdquo;abc&amp;rdquo;，改变指向，指向了&amp;rdquo;abcd&amp;rdquo;；说明s1指向的内存地址改变了，但内存中&amp;rdquo;abc&amp;rdquo;对象依旧存在，只是在运算的时候又&amp;rdquo;new&amp;rdquo;了一个&amp;rdquo;abcd&amp;rdquo;对象。
+ 因为String对象是不可变的（为什么不可变？下文会一一解惑），所以它们可以被共享。
+String s1 = &amp;quot;abc&amp;quot;; String s2 = &amp;quot;abc&amp;quot;; // 内存中只有一个&amp;quot;abc&amp;quot;对象被创建，同时被s1和s2共享。  &amp;ldquo;abc&amp;rdquo; 等效于 char[] data={ &amp;lsquo;a&amp;rsquo; , &amp;lsquo;b&amp;rsquo; , &amp;lsquo;c&amp;rsquo; } 。
+例如： String str = &amp;quot;abc&amp;quot;; 相当于： char data[] = {&#39;a&#39;, &#39;b&#39;, &#39;c&#39;}; String str = new String(data);  &amp;ensp;&amp;ensp;说明： String底层是靠字符数组char[]实现的。
+  String对象为什么是不可变的？ public final class String implements java.</description>
+    </item>
+    
+  </channel>
+</rss>
