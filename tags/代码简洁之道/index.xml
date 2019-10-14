@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>代码简洁之道 on 首页</title>
+    <link>https://wjw66.github.io/tags/%E4%BB%A3%E7%A0%81%E7%AE%80%E6%B4%81%E4%B9%8B%E9%81%93/</link>
+    <description>Recent content in 代码简洁之道 on 首页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wjw66.github.io/tags/%E4%BB%A3%E7%A0%81%E7%AE%80%E6%B4%81%E4%B9%8B%E9%81%93/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>让代码性能更高</title>
+      <link>https://wjw66.github.io/2019/%E8%AE%A9%E4%BB%A3%E7%A0%81%E6%80%A7%E8%83%BD%E6%9B%B4%E9%AB%98/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://wjw66.github.io/2019/%E8%AE%A9%E4%BB%A3%E7%A0%81%E6%80%A7%E8%83%BD%E6%9B%B4%E9%AB%98/</guid>
+      <description>让代码性能更高 需要 Map 的主键和取值时，应该迭代 entrySet()
+当循环中只需要 Map 的主键时，迭代 keySet() 是正确的。但是，当需要主键和取值时，迭代 entrySet() 才是更高效的做法，比先迭代 keySet() 后再去 get 取值性能更佳。
+反例：
+Map&amp;lt;String, String&amp;gt; map = ...; for (String key : map.keySet()) { String value = map.get(key); ... }  正例：
+Map&amp;lt;String, String&amp;gt; map = ...; for (Map.Entry&amp;lt;String, String&amp;gt; entry : map.entrySet()) { String key = entry.getKey(); String value = entry.getValue(); ... }  应该使用Collection.isEmpty()检测空
+使用 Collection.size() 来检测空逻辑上没有问题，但是使用 Collection.isEmpty()使得代码更易读，并且可以获得更好的性能。任何 Collection.isEmpty() 实现的时间复杂度都是 O(1) ，但是某些 Collection.size() 实现的时间复杂度可能是 O(n) 。</description>
+    </item>
+    
+  </channel>
+</rss>

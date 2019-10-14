@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SpringBoot on 首页</title>
+    <link>https://wjw66.github.io/tags/springboot/</link>
+    <description>Recent content in SpringBoot on 首页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wjw66.github.io/tags/springboot/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SpringBoot配置application.yml</title>
+      <link>https://wjw66.github.io/2019/springboot%E9%85%8D%E7%BD%AEapplication.yml%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://wjw66.github.io/2019/springboot%E9%85%8D%E7%BD%AEapplication.yml%E8%AF%A6%E8%A7%A3/</guid>
+      <description>server: prot: 8888　#配置访问的端口 servlet: context-path: /xxx　#配置访问时的项目名 spring: devtools:　restart: enabled: true　#这个好像是热加载，每次代码有改动就自动重启，原来的restart ClassLoader 被丢弃，重新创建一个restart ClassLoader，由于需要加载的类相比较少，所以实现了较快的重启时间。 datasource: url: jdbc:mysql://localhost:3306/xxx?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;useSSL=true　#配置数据库的路径 username: root　#数据库登录名 password: root #登陆密码 type: com.alibaba.druid.pool.DruidDataSource #这个可以看一下https://blog.csdn.net/qq_27191423/article/details/79146855 driver-class-name: com.mysql.jdbc.Driver filters: stat maxActive: 20　#连接池的最大值，同一时间可以从池分配的最多连接数量，0时无限制 initialSize: 1　#连接初始值，连接池启动时创建的连接数量的初始值 maxWait: 60000 minIdle: 1　#最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请 timeBetweenEvictionRunsMillis: 60000 minEvictableIdleTimeMillis: 300000 validationQuery: select &#39;x&#39; testWhileIdle: true testOnBorrow: false testOnReturn: false poolPreparedStatements: true #是否对已备语句进行池管理（布尔值），是否对PreparedStatement进行缓存 maxOpenPreparedStatements: 20 jackson: date-format: yyyy-MM-dd HH:mm:ss time-zone: GMT+8 mybatis-plus: mapper-locations: classpath*:mapper/**/*Mapper.</description>
+    </item>
+    
+  </channel>
+</rss>

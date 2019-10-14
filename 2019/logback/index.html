@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="王建伟">
+  
+  
+  
+  <link rel="prev" href="https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/" />
+  <link rel="next" href="https://wjw66.github.io/2019/lambda%E7%9A%84%E4%BD%BF%E7%94%A8/" />
+  <link rel="canonical" href="https://wjw66.github.io/2019/logback/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           logback 简介 | 首页
+       
+  </title>
+  <meta name="title" content="logback 简介 | 首页">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/wjw66.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "logback 简介",
+    "headline" : "logback 简介",
+    "description" : "logback 简介  logback 官网：https:\/\/logback.qos.ch\/\n 目前还没有看过日志类框架的源码，仅限于如何使用。所以就不说那些“空话”了。最直观的认知是：\n logback和log4j是一个人写的 springboot默认使用的日志框架是logback。 三个模块组成 logback-core logback-classic logback-access  其他的关于性能，关于内存占用，关于测试，关于文档详见源码及官网说明\nlogback-core 是其它模块的基础设施，其它模块基于它构建，显然，logback-core 提供了一些关键的通用机制。logback-classic 的地位和作用等同于 Log4J，它也被认为是 Log4J 的一个改进版，并且它实现了简单日志门面 SLF4J；而 logback-access 主要作为一个与 Servlet 容器交互的模块，比如说tomcat或者 jetty，提供一些与 HTTP 访问相关的功能。\n配置文件详解 这部分主要来学习下logback配置文件的一些配置项。\nconfiguration 先来看这张图，这个结构就是整个logback.xml配置文件的结构。\n对应来看下配置文件：\n\x26lt;configuration scan=\x26quot;true\x26quot; scanPeriod=\x26quot;60 seconds\x26quot; debug=\x26quot;false\x26quot;\x26gt; \x26lt;property name=\x26quot;glmapper-name\x26quot; value=\x26quot;glmapper-demo\x26quot; \/\x26gt; \x26lt;contextName\x26gt;${glmapper-name}\x26lt;\/contextName\x26gt; \x26lt;appender\x26gt; \/\/xxxx \x26lt;\/appender\x26gt; \x26lt;logger\x26gt; \/\/xxxx \x26lt;\/logger\x26gt; \x26lt;root\x26gt; \/\/xxxx \x26lt;\/root\x26gt; \x26lt;\/configuration\x26gt;   ps：想使用spring扩展profile支持，要以logback-spring.xml命名，其他如property需要改为springProperty\n  scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。  contextName 每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用contextName标签设置成其他名字，用于区分不同应用程序的记录\nproperty 用来定义变量值的标签，property标签有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。通过property定义的值会被插入到logger上下文中。定义变量后，可以使“${name}”来使用变量。如上面的xml所示。",
+    "inLanguage" : "en-us",
+    "author" : "王建伟",
+    "creator" : "王建伟",
+    "publisher": "王建伟",
+    "accountablePerson" : "王建伟",
+    "copyrightHolder" : "王建伟",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-10-14 00:00:00 \x2b0000 UTC",
+    "dateModified" : "2019-10-14 00:00:00 \x2b0000 UTC",
+    "url" : "https:\/\/wjw66.github.io\/2019\/logback\/",
+    "wordCount" : "749",
+    "keywords" : [ "Java基础","logback日志", "首页"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">logback 简介</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://wjw66.github.io/" rel="author">王建伟</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-10-14 itemprop="datePublished">October 14, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://wjw66.github.io/categories/%E6%97%A5%E5%BF%97%E4%BD%BF%E7%94%A8/"> 日志使用 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="logback-简介">logback 简介</h3>
+
+<blockquote>
+<p>logback 官网：<a href="https://logback.qos.ch/" rel="nofollow noreferrer" target="_blank">https://logback.qos.ch/</a></p>
+</blockquote>
+
+<p>目前还没有看过日志类框架的源码，仅限于如何使用。所以就不说那些“空话”了。最直观的认知是：</p>
+
+<ul>
+<li><code>logback</code>和<code>log4j</code>是一个人写的</li>
+<li><code>springboot</code>默认使用的日志框架是<code>logback</code>。</li>
+<li>三个模块组成</li>
+<li>logback-core</li>
+<li>logback-classic</li>
+<li>logback-access</li>
+</ul>
+
+<p>其他的关于性能，关于内存占用，关于测试，关于文档详见源码及官网说明</p>
+
+<p><code>logback-core</code> 是其它模块的基础设施，其它模块基于它构建，显然，<code>logback-core</code> 提供了一些关键的通用机制。<code>logback-classic</code> 的地位和作用等同于 <code>Log4J</code>，它也被认为是 <code>Log4J</code> 的一个改进版，并且它实现了简单日志门面 <code>SLF4J</code>；而 <code>logback-access</code> 主要作为一个与 <code>Servlet</code> 容器交互的模块，比如说<code>tomcat</code>或者 <code>jetty</code>，提供一些与 <code>HTTP</code> 访问相关的功能。</p>
+
+<h2 id="配置文件详解">配置文件详解</h2>
+
+<p>这部分主要来学习下logback配置文件的一些配置项。</p>
+
+<h2 id="configuration">configuration</h2>
+
+<p>先来看这张图，这个结构就是整个logback.xml配置文件的结构。</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic3.zhimg.com/80/v2-9dd0bbd5e890fe912af3215a9452a7b2_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>对应来看下配置文件：</p>
+
+<pre><code class="language-xml">&lt;configuration scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt;  
+    &lt;property name=&quot;glmapper-name&quot; value=&quot;glmapper-demo&quot; /&gt; 
+    &lt;contextName&gt;${glmapper-name}&lt;/contextName&gt; 
+    
+    
+    &lt;appender&gt;
+        //xxxx
+    &lt;/appender&gt;   
+    
+    &lt;logger&gt;
+        //xxxx
+    &lt;/logger&gt;
+    
+    &lt;root&gt;             
+       //xxxx
+    &lt;/root&gt;  
+&lt;/configuration&gt;  
+</code></pre>
+
+<blockquote>
+<p>ps：想使用spring扩展profile支持，要以logback-spring.xml命名，其他如property需要改为springProperty</p>
+</blockquote>
+
+<ul>
+<li>scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。</li>
+<li>scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。</li>
+<li>debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。</li>
+</ul>
+
+<h3 id="contextname">contextName</h3>
+
+<p>每个<code>logger</code>都关联到<code>logger</code>上下文，默认上下文名称为<code>“default”</code>。但可以使用<code>contextName</code>标签设置成其他名字，用于区分不同应用程序的记录</p>
+
+<h3 id="property">property</h3>
+
+<p>用来定义变量值的标签，<code>property</code>标签有两个属性，<code>name</code>和<code>value</code>；其中<code>name</code>的值是变量的名称，<code>value</code>的值时变量定义的值。通过<code>property</code>定义的值会被插入到<code>logger</code>上下文中。定义变量后，可以使“${name}”来使用变量。如上面的<code>xml</code>所示。</p>
+
+<h3 id="logger">logger</h3>
+
+<p>用来设置某一个包或者具体的某一个类的日志打印级别以及指定<code>appender</code>。</p>
+
+<h3 id="root">root</h3>
+
+<p>根logger，也是一种logger，且只有一个level属性</p>
+
+<h3 id="appender">appender</h3>
+
+<p>负责写日志的组件，下面会细说</p>
+
+<h3 id="filter">filter</h3>
+
+<p>filter其实是appender里面的子元素。它作为过滤器存在，执行一个过滤器会有返回DENY，NEUTRAL，ACCEPT三个枚举值中的一个。</p>
+
+<ul>
+<li>DENY：日志将立即被抛弃不再经过其他过滤器</li>
+<li>NEUTRAL：有序列表里的下个过滤器过接着处理日志</li>
+<li>ACCEPT：日志会被立即处理，不再经过剩余过滤器</li>
+</ul>
+
+<h2 id="案例分析">案例分析</h2>
+
+<p>首先来配置一个非常简单的文件。这里申请下，我使用的是 <code>logback-spring.xml</code>。和 <code>logback.xml</code> 在<code>properties</code>上有略微差别。其他都一样。</p>
+
+<blockquote>
+<p>工程：springboot+web</p>
+</blockquote>
+
+<p>先来看下项目目录</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic3.zhimg.com/80/v2-28b9402ba27f73caadec4ec4e6eeb552_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>properties中就是指定了日志的打印级别和日志的输出位置：</p>
+
+<pre><code class="language-xml">#设置应用的日志级别
+logging.level.com.glmapper.spring.boot=INFO
+#路径
+logging.path=./logs
+</code></pre>
+
+<h2 id="通过控制台输出的log">通过控制台输出的log</h2>
+
+<h3 id="logback-spring-xml的配置如下">logback-spring.xml的配置如下：</h3>
+
+<pre><code class="language-xml">&lt;configuration&gt;
+    &lt;!-- 默认的控制台日志输出，一般生产环境都是后台启动，这个没太大作用 --&gt;
+    &lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+            &lt;Pattern&gt;%d{HH:mm:ss.SSS} %-5level %logger{80} - %msg%n&lt;/Pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    
+    &lt;root level=&quot;info&quot;&gt;
+        &lt;appender-ref ref=&quot;STDOUT&quot;/&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;
+</code></pre>
+
+<h3 id="打印日志的controller">打印日志的controller</h3>
+
+<pre><code class="language-xml">private static final Logger LOGGER =
+LoggerFactory.getLogger(HelloController.class);
+@Autowired
+private TestLogService testLogService;
+
+@GetMapping(&quot;/hello&quot;)
+public String hello(){
+    LOGGER.info(&quot;GLMAPPER-SERVICE:info&quot;);
+    LOGGER.error(&quot;GLMAPPER-SERVICE:error&quot;);
+    testLogService.printLogToSpecialPackage();
+    return &quot;hello spring boot&quot;;
+}
+</code></pre>
+
+<h3 id="验证结果">验证结果：</h3>
+
+<pre><code class="language-xml">01:50:39.633 INFO  com.glmapper.spring.boot.controller.HelloController
+- GLMAPPER-SERVICE:info
+01:50:39.633 ERROR com.glmapper.spring.boot.controller.HelloController
+- GLMAPPER-SERVICE:error
+</code></pre>
+
+<p>上面的就是通过控制台打印出来的，这个时候因为我们没有指定日志文件的输出，因为不会在工程目录下生产<code>logs</code>文件夹。</p>
+
+<h2 id="控制台不打印-直接输出到日志文件">控制台不打印，直接输出到日志文件</h2>
+
+<p>先来看下配置文件：</p>
+
+<pre><code class="language-xml">&lt;configuration&gt;
+    &lt;!-- 属性文件:在properties文件中找到对应的配置项 --&gt;
+    &lt;springProperty scope=&quot;context&quot; name=&quot;logging.path&quot;  source=&quot;logging.path&quot;/&gt;
+    &lt;springProperty scope=&quot;context&quot; name=&quot;logging.level&quot; source=&quot;logging.level.com.glmapper.spring.boot&quot;/&gt;
+    &lt;!-- 默认的控制台日志输出，一般生产环境都是后台启动，这个没太大作用 --&gt;
+    &lt;appender name=&quot;STDOUT&quot;
+        class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+            &lt;Pattern&gt;%d{HH:mm:ss.SSS} %-5level %logger{80} - %msg%n&lt;/Pattern&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    
+    &lt;appender name=&quot;GLMAPPER-LOGGERONE&quot;
+    class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+        &lt;append&gt;true&lt;/append&gt;
+        &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+            &lt;level&gt;${logging.level}&lt;/level&gt;
+        &lt;/filter&gt;
+        &lt;file&gt;
+            ${logging.path}/glmapper-spring-boot/glmapper-loggerone.log
+        &lt;/file&gt;
+        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+            &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/glmapper-loggerone.log.%d{yyyy-MM-dd}&lt;/FileNamePattern&gt;
+            &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+        &lt;/rollingPolicy&gt;
+        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+            &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+            &lt;charset&gt;UTF-8&lt;/charset&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+    
+    &lt;root level=&quot;info&quot;&gt;
+        &lt;appender-ref ref=&quot;GLMAPPER-LOGGERONE&quot;/&gt;
+    &lt;/root&gt;
+&lt;/configuration&gt;
+</code></pre>
+
+<p>这里我们<code>appender-ref</code>指定的<code>appender</code>是<code>GLMAPPER-LOGGERONE</code>，因为之前没有名字为<code>GLMAPPER-LOGGERONE</code>的<code>appender</code>，所以要增加一个<code>name</code>为<code>GLMAPPER-LOGGERONE</code>的<code>appender</code>。</p>
+
+<p>注意上面这个配置，我们是直接接将<code>root</code>的<code>appender-ref</code>直接指定到我们的<code>GLMAPPER-LOGGERONE</code>这个appender的。所以控制台中将只会打印出bannar之后就啥也不打印了，所有的启动信息都会被打印在日志文件<code>glmapper-loggerone.log</code>中。</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic1.zhimg.com/80/v2-9ef333dcd4afc497167787bf88bc1ce8_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>但是实际上我们不希望我的业务日志中会包括这些启动信息。所以这个时候我们就需要通过<code>logger</code>标签来搞事情了。将上面的配置文件进行简单修改：</p>
+
+<pre><code class="language-xml">&lt;logger name=&quot;com.glmapper.spring.boot.controller&quot; level=&quot;${logging.level}&quot;
+        additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;GLMAPPER-LOGGERONE&quot; /&gt;
+&lt;/logger&gt;
+
+&lt;root level=&quot;${logging.level}&quot;&gt;
+    &lt;appender-ref ref=&quot;STDOUT&quot;/&gt;
+&lt;/root&gt;
+</code></pre>
+
+<p>让<code>root</code>指向控制台输出；<code>logger</code>负责打印包<code>com.glmapper.spring.boot.controller</code>下的日志。</p>
+
+<h3 id="验证结果-1">验证结果</h3>
+
+<p>还是通过我们的测试controller来打印日志为例，但是这里不会在控制台出现日志信息了。期望的日志文件在<code>./logs/glmapper-spring-boot/glmapper-loggerone.log</code>。</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic1.zhimg.com/80/v2-b2f4c52d8cf406f66fef355508e21ad0_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<h2 id="logger和appender的关系">logger和appender的关系</h2>
+
+<p>上面两种是一个基本的配置方式，通过上面两个案例，我们先来了解下<code>logger/appender/root</code>之间的关系，然后再详细的说下<code>logger</code>和<code>appender</code>的配置细节。</p>
+
+<p>在最前面介绍中提到，<code>root</code>是根<code>logger</code>,所以他两是一回事；只不过<code>root</code>中不能有<code>name</code>和<code>additivity</code>属性，是有一个<code>level</code>。</p>
+
+<p><code>appender</code>是一个日志打印的组件，这里组件里面定义了打印过滤的条件、打印输出方式、滚动策略、编码方式、打印格式等等。但是它仅仅是一个打印组件，如果我们不使用一个<code>logger</code>或者<code>root</code>的<code>appender-ref</code>指定某个具体的<code>appender</code>时，它就没有什么意义。</p>
+
+<p>因此<code>appender</code>让我们的应用知道怎么打、打印到哪里、打印成什么样；而<code>logger</code>则是告诉应用哪些可以这么打。例如某个类下的日志可以使用这个<code>appender</code>打印或者某个包下的日志可以这么打印。</p>
+
+<h2 id="appender-配置详解">appender 配置详解</h2>
+
+<p>这里以上面案例中的名为<code>GLMAPPER-LOGGERONE</code>的<code>appender</code>说明：</p>
+
+<pre><code class="language-xml">&lt;appender name=&quot;GLMAPPER-LOGGERONE&quot;
+    class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;append&gt;true&lt;/append&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;${logging.level}&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;file&gt;
+        ${logging.path}/glmapper-spring-boot/glmapper-loggerone.log
+    &lt;/file&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/glmapper-loggerone.log.%d{yyyy-MM-dd}&lt;/FileNamePattern&gt;
+        &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+        &lt;charset&gt;UTF-8&lt;/charset&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre>
+
+<p><code>appender</code> 有两个属性 <code>name</code>和<code>class</code>;<code>name</code>指定<code>appender</code>名称，<code>class</code>指定<code>appender</code>的全限定名。上面声明的是名为<code>GLMAPPER-LOGGERONE</code>，<code>class</code>为<code>ch.qos.logback.core.rolling.RollingFileAppender</code>的一个<code>appender</code>。</p>
+
+<p>appender 的种类</p>
+
+<ul>
+<li>ConsoleAppender：把日志添加到控制台</li>
+<li>FileAppender：把日志添加到文件</li>
+<li>RollingFileAppender：滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。它是FileAppender的子类</li>
+</ul>
+
+<h3 id="append-子标签">append 子标签</h3>
+
+<pre><code class="language-xml">&lt;append&gt;true&lt;/append&gt;
+</code></pre>
+
+<p>如果是 <code>true</code>，日志被追加到文件结尾，如果是<code>false</code>，清空现存文件，默认是<code>true</code>。</p>
+
+<h3 id="filter-子标签">filter 子标签</h3>
+
+<p>在简介中提到了<code>filter</code>；作用就是上面说的。可以为<code>appender</code> 添加一个或多个过滤器，可以用任意条件对日志进行过滤。<code>appender</code> 有多个过滤器时，按照配置顺序执行。</p>
+
+<h3 id="thresholdfilter">ThresholdFilter</h3>
+
+<p>临界值过滤器，过滤掉低于指定临界值的日志。当日志级别等于或高于临界值时，过滤器返回<code>NEUTRAL</code>；当日志级别低于临界值时，日志会被拒绝。</p>
+
+<pre><code class="language-xml">&lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+    &lt;level&gt;INFO&lt;/level&gt;
+&lt;/filter&gt;
+</code></pre>
+
+<p>LevelFilter</p>
+
+<p>级别过滤器，根据日志级别进行过滤。如果日志级别等于配置级别，过滤器会根据<code>onMath</code>(用于配置符合过滤条件的操作) 和 <code>onMismatch</code>(用于配置不符合过滤条件的操作)接收或拒绝日志。</p>
+
+<pre><code class="language-xml">&lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;   
+  &lt;level&gt;INFO&lt;/level&gt;   
+  &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;   
+  &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;   
+&lt;/filter&gt; 
+</code></pre>
+
+<p>关于<code>NEUTRAL</code>、<code>ACCEPT</code>、<code>DENY</code> 见上文简介中关于<code>filter</code>的介绍。</p>
+
+<h3 id="file-子标签">file 子标签</h3>
+
+<p><code>file</code> 标签用于指定被写入的文件名，可以是相对目录，也可以是绝对目录，如果上级目录不存在会自动创建，没有默认值。</p>
+
+<pre><code class="language-xml">&lt;file&gt;
+    ${logging.path}/glmapper-spring-boot/glmapper-loggerone.log
+&lt;/file&gt;
+</code></pre>
+
+<p>这个表示当前appender将会将日志写入到<code>${logging.path}/glmapper-spring-boot/glmapper-loggerone.log</code>这个目录下。</p>
+
+<h3 id="rollingpolicy-子标签">rollingPolicy 子标签</h3>
+
+<p>这个子标签用来描述滚动策略的。这个只有<code>appender</code>的<code>class</code>是<code>RollingFileAppender</code>时才需要配置。这个也会涉及文件的移动和重命名（a.log-&gt;a.log.2018.07.22）。</p>
+
+<h3 id="timebasedrollingpolicy">TimeBasedRollingPolicy</h3>
+
+<p>最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动。这个下面又包括了两个属性：</p>
+
+<ul>
+<li>FileNamePattern</li>
+
+<li><p>maxHistory</p>
+
+<pre><code class="language-xml">&lt;rollingPolicy 
+class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+&lt;!--日志文件输出的文件名:按天回滚 daily --&gt;
+&lt;FileNamePattern&gt;
+    ${logging.path}/glmapper-spring-boot/glmapper-loggerone.log.%d{yyyy-MM-dd}
+&lt;/FileNamePattern&gt;
+&lt;!--日志文件保留天数--&gt;
+&lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+&lt;/rollingPolicy&gt;
+</code></pre></li>
+</ul>
+
+<p>上面的这段配置表明<strong>每天生成一个日志文件，保存30天的日志文件</strong></p>
+
+<h3 id="fixedwindowrollingpolicy">FixedWindowRollingPolicy</h3>
+
+<p>根据固定窗口算法重命名文件的滚动策略。</p>
+
+<h3 id="encoder-子标签">encoder 子标签</h3>
+
+<p>对记录事件进行格式化。它干了两件事：</p>
+
+<ul>
+<li>把日志信息转换成字节数组</li>
+
+<li><p>把字节数组写入到输出流</p>
+
+<pre><code class="language-xml">&lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+&lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}
+- %msg%n&lt;/pattern&gt;
+&lt;charset&gt;UTF-8&lt;/charset&gt;
+&lt;/encoder&gt;
+</code></pre></li>
+</ul>
+
+<p>目前<code>encoder</code>只有<code>PatternLayoutEncoder</code>一种类型。</p>
+
+<h3 id="定义一个只打印error级别日志的appcener">定义一个只打印error级别日志的appcener</h3>
+
+<pre><code class="language-xml"> &lt;!-- 错误日志 appender ： 按照每天生成日志文件 --&gt;
+&lt;appender name=&quot;ERROR-APPENDER&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;append&gt;true&lt;/append&gt;
+    &lt;!-- 过滤器，只记录 error 级别的日志 --&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;error&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;!-- 日志名称 --&gt;
+    &lt;file&gt;${logging.path}/glmapper-spring-boot/glmapper-error.log&lt;/file&gt;
+    &lt;!-- 每天生成一个日志文件，保存30天的日志文件 --&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;!--日志文件输出的文件名:按天回滚 daily --&gt;
+        &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/glmapper-error.log.%d{yyyy-MM-dd}&lt;/FileNamePattern&gt;
+        &lt;!--日志文件保留天数--&gt;
+        &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符--&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+        &lt;!-- 编码 --&gt;
+        &lt;charset&gt;UTF-8&lt;/charset&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre>
+
+<h3 id="定义一个输出到控制台的appender">定义一个输出到控制台的appender</h3>
+
+<pre><code class="language-xml">&lt;!-- 默认的控制台日志输出，一般生产环境都是后台启动，这个没太大作用 --&gt;
+&lt;appender name=&quot;STDOUT&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;Pattern&gt;%d{HH:mm:ss.SSS} %-5level %logger{80} - %msg%n&lt;/Pattern&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+</code></pre>
+
+<h2 id="logger-配置详解">logger 配置详解</h2>
+
+<pre><code class="language-xml">&lt;logger name=&quot;com.glmapper.spring.boot.controller&quot;
+        level=&quot;${logging.level}&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;GLMAPPER-LOGGERONE&quot; /&gt;
+&lt;/logger&gt;
+</code></pre>
+
+<p>上面的这个配置文件描述的是：<code>com.glmapper.spring.boot.controller</code>这个包下的<code>${logging.level}</code>级别的日志将会使用<code>GLMAPPER-LOGGERONE</code>来打印。<code>logger</code>有三个属性和一个子标签：</p>
+
+<ul>
+<li>name:用来指定受此<code>logger</code>约束的某一个包或者具体的某一个类。</li>
+<li>level:用来设置打印级别（<code>TRACE</code>, <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code>, <code>ALL</code> 和 <code>OFF</code>），还有一个值<code>INHERITED</code>或者同义词<code>NULL</code>，代表强制执行上级的级别。如果没有设置此属性，那么当前<code>logger</code>将会继承上级的级别。</li>
+<li>addtivity:用来描述是否向上级<code>logger</code>传递打印信息。默认是<code>true</code>。</li>
+</ul>
+
+<p><code>appender-ref</code>则是用来指定具体<code>appender</code>的。</p>
+
+<h2 id="不同日志隔离打印案例">不同日志隔离打印案例</h2>
+
+<p>在前面的例子中我们有三种appender,一个是指定包约束的，一个是控制error级别的，一个是控制台的。然后这小节我们就来实现下不同日志打印到不同的log文件中。</p>
+
+<h3 id="根据包进行日志文件隔离">根据包进行日志文件隔离</h3>
+
+<p>这个例子里我们将<code>com.glmapper.spring.boot.controller</code>中的日志输出到<code>glmapper-controller.log</code>；将<code>com.glmapper.spring.boot.service</code>中的日志输出到<code>glmapper-service.log</code>。</p>
+
+<pre><code class="language-xml">&lt;!--打印日志到glmapper-service.log的appender--&gt;
+&lt;appender name=&quot;GLMAPPER-SERVICE&quot;
+          class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;append&gt;true&lt;/append&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;${logging.level}&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;file&gt;
+        ${logging.path}/glmapper-spring-boot/glmapper-service.log
+    &lt;/file&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/glmapper-service.log.%d{yyyy-MM-dd}&lt;/FileNamePattern&gt;
+        &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+        &lt;charset&gt;UTF-8&lt;/charset&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+
+&lt;!--打印日志到glmapper-controller.log的appender--&gt;
+&lt;appender name=&quot;GLMAPPER-CONTROLLER&quot;
+          class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;append&gt;true&lt;/append&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;${logging.level}&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;file&gt;
+        ${logging.path}/glmapper-spring-boot/glmapper-controller.log
+    &lt;/file&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/glmapper-controller.log.%d{yyyy-MM-dd}&lt;/FileNamePattern&gt;
+        &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+        &lt;charset&gt;UTF-8&lt;/charset&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+
+&lt;!--此logger约束将.controller包下的日志输出到GLMAPPER-CONTROLLER，错误日志输出到GERROR-APPENDE；GERROR-APPENDE见上面--&gt;
+&lt;logger name=&quot;com.glmapper.spring.boot.controller&quot; level=&quot;${logging.level}&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;GLMAPPER-CONTROLLER&quot; /&gt;
+    &lt;appender-ref ref=&quot;GERROR-APPENDER&quot; /&gt;
+&lt;/logger&gt;
+
+&lt;!--此logger约束将.service包下的日志输出到GLMAPPER-SERVICE，错误日志输出到GERROR-APPENDE；GERROR-APPENDE见上面--&gt;
+&lt;logger name=&quot;com.glmapper.spring.boot.service&quot; level=&quot;${logging.level}&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;GLMAPPER-SERVICE&quot; /&gt;
+    &lt;appender-ref ref=&quot;GERROR-APPENDER&quot; /&gt;
+&lt;/logger&gt;
+</code></pre>
+
+<p>来看运行结果</p>
+
+<p>1、glmaper-controller</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic2.zhimg.com/80/v2-1b741320537c35bd1ef395843fc8dc1d_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>2、glmapper-service</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic1.zhimg.com/80/v2-daea5518550f5bbbfb2c8a9ab4a40f68_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>3、glmapper-error</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic4.zhimg.com/80/v2-431d5a1a89a550bb7cadddad56f9e4b7_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>满足我们的预期，但是这里有个小问题。在<code>info</code>日志里出现了<code>error</code>,当然这是正常的。假如我们不想在<code>info</code>里面出现<code>error</code>怎么办呢？很简单，我们以<code>APPENDER-SERVICE</code>为例，将<code>filter</code>过滤器进行修改：</p>
+
+<p>将下面的：</p>
+
+<pre><code class="language-xml">&lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+    &lt;level&gt;${logging.level}&lt;/level&gt;
+&lt;/filter&gt;
+</code></pre>
+
+<p>修改为：</p>
+
+<pre><code class="language-xml">&lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;
+    &lt;level&gt;ERROR&lt;/level&gt;
+    &lt;!-- 如果命中就禁止这条日志 --&gt;
+    &lt;onMatch&gt;DENY&lt;/onMatch&gt;  
+    &lt;!-- 如果没有命中就使用这条规则 --&gt;
+    &lt;onMismatch&gt;ACCEPT&lt;/onMismatch&gt;  
+&lt;/filter&gt;
+</code></pre>
+
+<p>这里同时要注意的是，在<code>logger</code>中<code>level</code>需要设置为<code>info</code>级别。</p>
+
+<h3 id="根据类进行日志文件隔离">根据类进行日志文件隔离</h3>
+
+<p>这个其实也是和上面那个差不过，只不过粒度更细一点，一般情况下比如说我们有个定时任务类需要单独来记录其日志信息，这样我们就可以考虑使用基于类维度来约束打印。</p>
+
+<pre><code class="language-xml">&lt;!--特殊功能单独appender 例如调度类的日志--&gt;
+&lt;appender name=&quot;SCHEDULERTASKLOCK-APPENDER&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;append&gt;true&lt;/append&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;${logging.level}&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;file&gt;${logging.path}/glmapper-spring-boot/scheduler-task-lock.log&lt;/file&gt;
+    &lt;!-- 每天生成一个日志文件，保存30天的日志文件 --&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;!--日志文件输出的文件名:按天回滚 daily --&gt;
+        &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/scheduler-task-lock.log.%d{yyyy-MM-dd}&lt;/FileNamePattern&gt;
+        &lt;!--日志文件保留天数--&gt;
+        &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符--&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+        &lt;!-- 编码 --&gt;
+        &lt;charset&gt;UTF-8&lt;/charset&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+
+&lt;!--这里指定到了具体的某一个类--&gt;
+&lt;logger name=&quot;com.glmapper.spring.boot.task.TestLogTask&quot; level=&quot;${logging.level}&quot; additivity=&quot;true&quot;&gt;
+        &lt;appender-ref ref=&quot;SCHEDULERTASKLOCK-APPENDER&quot; /&gt;
+        &lt;appender-ref ref=&quot;ERROR-APPENDER&quot; /&gt;
+    &lt;/logger&gt;
+</code></pre>
+
+<p>最终<code>TestLogTask</code>中的日志将会被打印到这个自己独立的log文件中。如下所示：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic2.zhimg.com/80/v2-84599720d9b979c95685851476d4ffa1_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<h3 id="根据自定义-logger-的-name-进行日志文件隔离">根据自定义 logger 的 name 进行日志文件隔离</h3>
+
+<p><code>logger</code>的<code>name</code>除了类、包等约束之外，当然还可以这样来玩。。。</p>
+
+<p>在进行案例之前，这里先把前面案例中<code>logger</code>声明的代码贴一下，以作对比,以<code>TestLogTask</code>类中的日志为例：</p>
+
+<pre><code class="language-xml"> private static final Logger LOGGER =
+ LoggerFactory.getLogger(TestLogTask.class);
+</code></pre>
+
+<p>在<code>getLogger</code>中我们是将当前对象的<code>class</code>作为参数的，这个是为了打印时获取其全限定名的（见下面3-）。</p>
+
+<pre><code class="language-xml">1-2018-07-21 11:15:42.003 [pool-1-thread-1] 
+2-INFO  
+3-com.glmapper.spring.boot.task.TestLogTask -
+4-com.glmapper.spring.boot.task:info
+</code></pre>
+
+<h3 id="业务类定义">业务类定义</h3>
+
+<p>我们同样是<code>service</code>包下定义一个类<code>TestLogNameServiceImpl</code></p>
+
+<pre><code class="language-xml">package com.glmapper.spring.boot.service;
+
+@Service(&quot;testLogNameService&quot;)
+public class TestLogNameServiceImpl implements TestLogNameService {
+
+    private static final Logger LOGGER =
+    LoggerFactory.getLogger(&quot;GLMAPPER-TEST-LOG&quot;);
+
+    @Override
+    public void print() {
+        LOGGER.info(&quot;GLMAPPER-TEST-LOG:this is special logger-----info&quot;);
+        LOGGER.error(&quot;GLMAPPER-TEST-LOG:this is special logger-------error&quot;);
+    }
+}
+</code></pre>
+
+<h3 id="appender和logger配置">appender和logger配置</h3>
+
+<pre><code class="language-xml">&lt;appender name=&quot;ROOT-APPENDER&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;
+    &lt;append&gt;true&lt;/append&gt;
+    &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;
+        &lt;level&gt;${logging.level}&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;file&gt;${logging.path}/glmapper-spring-boot/glmapper-test.log&lt;/file&gt;
+    &lt;!-- 每天生成一个日志文件，保存30天的日志文件 --&gt;
+    &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;
+        &lt;!--日志文件输出的文件名:按天回滚 daily --&gt;
+        &lt;FileNamePattern&gt;${logging.path}/glmapper-spring-boot/glmapper-test.log.%d{yyyy-MM-dd}
+        &lt;/FileNamePattern&gt;
+        &lt;!--日志文件保留天数--&gt;
+        &lt;MaxHistory&gt;30&lt;/MaxHistory&gt;
+    &lt;/rollingPolicy&gt;
+    &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;
+        &lt;!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符--&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n&lt;/pattern&gt;
+        &lt;!-- 编码 --&gt;
+        &lt;charset&gt;UTF-8&lt;/charset&gt;
+    &lt;/encoder&gt;
+&lt;/appender&gt;
+
+&lt;!--这里的name和业务类中的getLogger中的字符串是一样的--&gt;
+&lt;logger name=&quot;GLMAPPER-TEST-LOG&quot; level=&quot;${logging.level}&quot; additivity=&quot;true&quot;&gt;
+        &lt;appender-ref ref=&quot;ROOT-APPENDER&quot; /&gt;
+        &lt;appender-ref ref=&quot;ERROR-APPENDER&quot; /&gt;
+    &lt;/logger&gt;
+</code></pre>
+
+<p>我们这个预期的是<code>TestLogNameServiceImpl</code>中的日志不打印到<code>glmapper-service.log</code>中，而是打印到<code>glmapper-test.log</code>中。</p>
+
+<p>1、glmapper-test.log</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic1.zhimg.com/80/v2-68543c308455817432f4168ad00cf494_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>2、glmapper-service.log</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic3.zhimg.com/80/v2-2c8e2dedd812b9294f4cd6bd61e3b722_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>满足我们的预期。</p>
+
+<h2 id="如何使用logback打印mybatis的sql语句">如何使用logback打印mybatis的sql语句</h2>
+
+<p>这个还是比较坑的。为什么。看下这个：</p>
+
+<pre><code class="language-xml">&lt;settings&gt;
+    &lt;setting name=&quot;logImpl&quot; value=&quot;slf4j&quot; /&gt;
+&lt;/settings&gt;
+</code></pre>
+
+<p>在<code>mybatis-configration.xml</code>中，我们通过这样一个配置项来关联到具体的日志组件。但是<code>logImpl</code>的实现中是没有<code>logback</code>的。那么怎么办呢？这里只能通过<code>slf4j</code>的方式桥接到<code>logback</code>。</p>
+
+<p>然后在我们的logback-spring.xml中进行如下配置：</p>
+
+<pre><code class="language-xml"> &lt;!-- 将sql语句输出到具体的日志文件中 --&gt;
+&lt;logger name=&quot;com.alipay.sofa.cloudplatform.common.dao&quot; level=&quot;${logging.sql.level}&quot; additivity=&quot;false&quot;&gt;
+    &lt;appender-ref ref=&quot;SQL-APPENDER&quot;/&gt;
+&lt;/logger&gt;
+</code></pre>
+
+<p>这里有几个点需要注意的。首先是<code>${logging.sql.level}</code>这个必须是debug，这个是由mybatis本身实现决定的。而这里的<code>name</code>设定的<code>com.alipay.sofa.cloudplatform.common.dao</code>值就是我们dao接口的包路径。</p>
+
+<p>网上看了一个比较典型的案例，这种方式只能输出到控制台，并不能将文件输出到日志文件；它是根据内部的一个实现机制偷了个懒。<a href="https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fxiaoyu411502%2Farticle%2Fdetails%2F51064885" rel="nofollow noreferrer" target="_blank">mybatis用logback日志不显示sql的解决办法</a>。</p>
+
+<p>总结
+本篇博客主要是整理最近工作中的一些日志配置积累，将每个细节进行总结一下，以作备忘。如果有时间的话会考虑看一个日志框架的源码。其实我觉得还是很有必要的，日志组件毕竟是需要进行日志文件落盘的，这个会涉及到许多的性能问题、缓冲区问题、队列问题、当然还有一些锁的问题、同步打印或者异步打印等问题。有兴趣的小伙伴可以看看，然后分享给我们。</p>
+
+<p>作者：glmapper
+链接：<a href="https://juejin.im/post/5b51f85c5188251af91a7525" rel="nofollow noreferrer" target="_blank">https://juejin.im/post/5b51f85c5188251af91a7525</a>
+来源：掘金</p>
+
+<h2 id="java日志组件logback详解">Java日志组件Logback详解</h2>
+
+<p><strong>课程目的：</strong>通过本课程学习，让你快速掌握Logback日志组件的使用。</p>
+
+<p><strong>适用人群：</strong>具有一定Java基础的开发人员。</p>
+
+<p><strong>课程概述：</strong>Logback 是由 Log4j 创始人设计的另一个开源日志组件，它抛弃了之前 Log4j 1.x 的不足，Logback用于取代 Log4j 1.x，Logback 是一个全新重写的日志组件，在一些关键执行路径上性能提升10倍以上，而且Logback不仅性能提升了，初始化内存加载也更小了。Logback 经过了几年数不清小时的非常充分的测试，其性能及稳定性非常可靠，Logback已成为优秀的Springboot框架默认的日志组件。</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://pic1.zhimg.com/80/v2-67ec377b56899aabef10542448887ab8_hd.jpg" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p><strong>环境参数：</strong>jdk1.8、maven、idea、logback</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>王建伟 </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://wjw66.github.io/2019/logback/>https://wjw66.github.io/2019/logback/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/java%E5%9F%BA%E7%A1%80/">
+                    #Java基础</a></span>
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/logback%E6%97%A5%E5%BF%97/">
+                    #logback日志</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://wjw66.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/" class="prev" rel="prev" title="QQ、微博授权登录"><i class="iconfont icon-left"></i>&nbsp;QQ、微博授权登录</a>
+         
+        
+        <a href="https://wjw66.github.io/2019/lambda%E7%9A%84%E4%BD%BF%E7%94%A8/" class="next" rel="next" title="Lambda的使用">Lambda的使用&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://wjw66.github.io/">王建伟</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

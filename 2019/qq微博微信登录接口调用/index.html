@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="王建伟">
+  
+  
+  
+  <link rel="prev" href="https://wjw66.github.io/2019/springboot%E9%85%8D%E7%BD%AEapplication.yml%E8%AF%A6%E8%A7%A3/" />
+  <link rel="next" href="https://wjw66.github.io/2019/logback/" />
+  <link rel="canonical" href="https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           QQ、微博授权登录 | 首页
+       
+  </title>
+  <meta name="title" content="QQ、微博授权登录 | 首页">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/wjw66.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "QQ、微博授权登录",
+    "headline" : "QQ、微博授权登录",
+    "description" : "QQ、微博授权登录 1 前言\n个人网站最近增加了评论功能，为了方便用户不用注册就可以评论，对接了 QQ 和微博这 2 大常用软件的一键登录，总的来说其实都挺简单的，可能会有一点小坑，但不算多，完整记录下来方便后来人快速对接。\n2 后台设计\n在真正开始对接之前，我们先来聊一聊后台的方案设计。既然是对接第三方登录，那就免不了如何将用户信息保存。首先需要明确一点的是，用户在第三方登录成功之后，我们能拿到的仅仅是一个代表用户唯一身份的ID（微博是真实uid，QQ是加密的openId）以及用来识别身份的accessToken，当然还有昵称、头像、性别等有限资料，对接第三方登录的关键就是如何确定用户是合法登录，如果确定这次登录的和上次登录的是同一个人并且不是假冒的。\n其实这个并不用我们特别操心，就以微博登录为例，用户登录成功之后会回调一个code 给我们，然后我们再拿code去微博那换取accessToken，如果这个code是用户乱填的，那这一关肯定过不了，所以，前面的担心有点多余。\n另外一个问题就是如何和现有用户系统打通，有的网站在用户已经登录成功之后还要用户输入手机号和验证码，或者要用户重新注册账号和密码来绑定第三方账户，感觉这种实现用户体验非常差，碰到这种网站我一般都是直接关掉，都已经登录了还让用户注册，什么鬼！由于我做的是评论功能，我并不希望评论用户和现有用户表打通，所以就不存在这件事了，如果想打通的话，我觉得无非就是登录成功之后默认往老用户表插入一条数据，然后和OpenUser表关联起来，判断用户是否登录时把OpenUser的鉴权也加进去就OK了。\n本文的后台以Java为例。\n2.1 数据库设计\n再来说说数据库设计，为了系统的扩展性，我有一个专门的OpenUser表用来存放第三方登录用户，主要字段如下：\n这样设计理论上就可以无限扩展了。\n2.2 鉴权流程\n这里我只是说说我的方案，把accessToken写入cookie肯定是不安全的，因为accessToken相当于是第三方网站的临时密码，被别人窃取了就可以随意拿来干坏事了。可以在用户登录成功之后我们自己生成一个token，这样的token即使泄露了顶多就是被人拿来随意评论，损失不大，但是如果accessToken被泄露了，以微博为例，人家可以利用这个accessToken随意发微博、删微博、加关注等等，很危险。当然，如果不想token泄露的话也可以通过绑定IP等方式来限制。\n鉴权的话就是首先判断cookie中是否有我们自己的token，然后判断是否合法，合法再判断第三方授权是否已过期等等。\n3 QQ登录\n3.1 实名认证\nQQ登录我们对接的是QQ互联，地址：https:\/\/connect.qq.com ,首先需要注册成为开发者并实名认证，需要手持身份证照片，具体就不讲了。\n3.2 创建应用\n进入应用管理页面(https:\/\/connect.qq.com\/manage.html#\/)创建应用，根据实际需要是创建网站应用还是移动应用，我这里是网站应用：\n第一步：\n第二步：\n提交完之后会自动提交审核，基本上就是审核你的资料和备案的资料是否一致，所有资料必须和备案资料一模一样，否则审核不会通过：\n当然，这些资料后面还是可以修改的。申请成功之后你会得到appId和appKey。\n3.3. 引导用户登录\n这里可以下载一些视觉素材，在页面合适位置放一个QQ登录按钮，点击时引导用户进入授权页面：\n代码：\nfunction openWindow(url, width, height){ width = width || 600; height = height || 400; var left = (window.screen.width - width) \/ 2; var top = (window.screen.height - height) \/ 2; window.",
+    "inLanguage" : "en-us",
+    "author" : "王建伟",
+    "creator" : "王建伟",
+    "publisher": "王建伟",
+    "accountablePerson" : "王建伟",
+    "copyrightHolder" : "王建伟",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-10-14 00:00:00 \x2b0000 UTC",
+    "dateModified" : "2019-10-14 00:00:00 \x2b0000 UTC",
+    "url" : "https:\/\/wjw66.github.io\/2019\/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8\/",
+    "wordCount" : "465",
+    "keywords" : [ "接口回调","QQ、微博授权登录", "首页"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://wjw66.github.io/">首页</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">博客</a>
+                
+                <a class="menu-item" href="/categories/" title="">分类</a>
+                
+                <a class="menu-item" href="/tags/" title="">标签</a>
+                
+                <a class="menu-item" href="/about/" title="">关于我</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">QQ、微博授权登录</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://wjw66.github.io/" rel="author">王建伟</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-10-14 itemprop="datePublished">October 14, 2019</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://wjw66.github.io/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E6%8E%A5%E5%8F%A3%E5%9B%9E%E8%B0%83/"> 第三方接口回调 </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          
+
+<h3 id="qq-微博授权登录">QQ、微博授权登录</h3>
+
+<p><strong>1 前言</strong></p>
+
+<p>个人网站最近增加了评论功能，为了方便用户不用注册就可以评论，对接了 QQ 和微博这 2 大常用软件的一键登录，总的来说其实都挺简单的，可能会有一点小坑，但不算多，完整记录下来方便后来人快速对接。</p>
+
+<p><strong>2 后台设计</strong></p>
+
+<p>在真正开始对接之前，我们先来聊一聊后台的方案设计。既然是对接第三方登录，那就免不了如何将用户信息保存。首先需要明确一点的是，用户在第三方登录成功之后，我们能拿到的仅仅是一个代表用户唯一身份的ID（微博是真实uid，QQ是加密的openId）以及用来识别身份的accessToken，当然还有昵称、头像、性别等有限资料，对接第三方登录的关键就是如何确定用户是合法登录，如果确定这次登录的和上次登录的是同一个人并且不是假冒的。</p>
+
+<p>其实这个并不用我们特别操心，就以微博登录为例，用户登录成功之后会回调一个code 给我们，然后我们再拿code去微博那换取accessToken，如果这个code是用户乱填的，那这一关肯定过不了，所以，前面的担心有点多余。</p>
+
+<p>另外一个问题就是如何和现有用户系统打通，有的网站在用户已经登录成功之后还要用户输入手机号和验证码，或者要用户重新注册账号和密码来绑定第三方账户，感觉这种实现用户体验非常差，碰到这种网站我一般都是直接关掉，都已经登录了还让用户注册，什么鬼！由于我做的是评论功能，我并不希望评论用户和现有用户表打通，所以就不存在这件事了，如果想打通的话，我觉得无非就是登录成功之后默认往老用户表插入一条数据，然后和OpenUser表关联起来，判断用户是否登录时把OpenUser的鉴权也加进去就OK了。</p>
+
+<p>本文的后台以Java为例。</p>
+
+<p><strong>2.1 数据库设计</strong></p>
+
+<p>再来说说数据库设计，为了系统的扩展性，我有一个专门的OpenUser表用来存放第三方登录用户，主要字段如下：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyLVatpNJpfoG1tWdwGxNa5sI3r1xeOBgIHiclVic5wvayu7ic1XlV8XW4Q/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>这样设计理论上就可以无限扩展了。</p>
+
+<p><strong>2.2 鉴权流程</strong></p>
+
+<p>这里我只是说说我的方案，把accessToken写入cookie肯定是不安全的，因为accessToken相当于是第三方网站的临时密码，被别人窃取了就可以随意拿来干坏事了。可以在用户登录成功之后我们自己生成一个token，这样的token即使泄露了顶多就是被人拿来随意评论，损失不大，但是如果accessToken被泄露了，以微博为例，人家可以利用这个accessToken随意发微博、删微博、加关注等等，很危险。当然，如果不想token泄露的话也可以通过绑定IP等方式来限制。</p>
+
+<p>鉴权的话就是首先判断cookie中是否有我们自己的token，然后判断是否合法，合法再判断第三方授权是否已过期等等。</p>
+
+<p><strong>3 QQ登录</strong></p>
+
+<p><strong>3.1 实名认证</strong></p>
+
+<p>QQ登录我们对接的是QQ互联，地址：<a href="https://connect.qq.com" rel="nofollow noreferrer" target="_blank">https://connect.qq.com</a> ,首先需要注册成为开发者并实名认证，需要手持身份证照片，具体就不讲了。</p>
+
+<p><strong>3.2 创建应用</strong></p>
+
+<p>进入应用管理页面(<a href="https://connect.qq.com/manage.html#/)创建应用，根据实际需要是创建网站应用还是移动应用，我这里是网站应用：" rel="nofollow noreferrer" target="_blank">https://connect.qq.com/manage.html#/)创建应用，根据实际需要是创建网站应用还是移动应用，我这里是网站应用：</a></p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyz6ZGVVMVp5f16vibhhcKZc8wVQKOhK4PKYxfO6dSuaLqd4NxfBqMsyw/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>第一步：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdydz1fDOr77U4lrIuVJyDjWsJNzPxrfg7EE5rbp6fWG96ictTzSSxahUQ/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>第二步：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdygsoWsuGAFFIiacOPXQWjpXFn58vDZZcbNLXrHQ5Gf6od62LmhPOSrTQ/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>提交完之后会自动提交审核，基本上就是审核你的资料和备案的资料是否一致，所有资料必须和备案资料一模一样，否则审核不会通过：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyWHlQXDIyQPo3dHVHnqqGOh5IU5wgIia2YYSYGtmu0Rzic9CaVlKxMdgA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>当然，这些资料后面还是可以修改的。申请成功之后你会得到appId和appKey。</p>
+
+<p><strong>3.3. 引导用户登录</strong></p>
+
+<p>这里可以下载一些视觉素材，在页面合适位置放一个QQ登录按钮，点击时引导用户进入授权页面：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyiajib5RhtDhia3ORia8EF1TRcAaQialqZP25n4YWAOrOrp9v7jOZicsXg3Kg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>代码：</p>
+
+<pre><code class="language-java">function openWindow(url, width, height){    
+width = width || 600;    height = height || 400;    
+var left = (window.screen.width - width) / 2;    
+var top = (window.screen.height - height) / 2;    
+window.open(url, &quot;_blank&quot;, &quot;toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, left=&quot;+left+&quot;, top=&quot;+top+&quot;, width=&quot;+width+&quot;, height=&quot;+height);
+}
+function qqLogin(){    
+var qqAppId = '424323422'; // 上面申请得到的appid    
+var qqAuthPath = 'http://www.test.com/auth'; // 前面设置的回调地址    
+var state = 'fjdslfjsdlkfd'; // 防止CSRF攻击的随机参数，必传，登录成功之后会回传，最好后台自己生成然后校验合法性    
+openWindow(`https://graph.qq.com/oauth2.0/authorize?response_type=token&amp;client_id=${qqAppId}&amp;redirect_uri=${encodeURIComponent(qqAuthPath)}&amp;state=${state}`);}
+</code></pre>
+
+<p>然后会打开一个授权页面，这个页面大家应该都熟悉：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyF8ayMGnIJgO9QHhhhkuicTGib5KLYn07BJ1cIEPCNMKc2FxnqHure9xw/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>然后到了这里我就碰到一个问题了，官方文档(<a href="https://wiki.connect.qq.com)写的是登录成功之后首先会回传一个code，然后再拿code调接口换取accessToken，然后我试了很多次也换过2个账号发现每次都是直接返回了accessToken，帮我省了一步了，不知道是什么情况，郁闷。微信搜索" rel="nofollow noreferrer" target="_blank">https://wiki.connect.qq.com)写的是登录成功之后首先会回传一个code，然后再拿code调接口换取accessToken，然后我试了很多次也换过2个账号发现每次都是直接返回了accessToken，帮我省了一步了，不知道是什么情况，郁闷。微信搜索</a> Web项目聚集地 获取更多实战教程。</p>
+
+<p><strong>3.4 拿到accessToken</strong></p>
+
+<p>现在假设我们都是直接拿到accessToken（因为我暂时还没搞明白QQ为啥会直接返回，跟文档说的不一样），但是授权回调时accessToken会被放在 # 后面，URL地址中的hash值好像不会被传到后台（貌似是这样，如有不正确欢迎评论指正），所以只能写一个下面这样的临时页面：</p>
+
+<pre><code>@RequestMapping(&quot;/authqq&quot;)
+public void authQQ(HttpServletRequest request, HttpServletResponse response) throws Exception{    // QQ登录有点特殊，参数放在#后面，后台无法获取#后面的参数，只能用JS做中间转换    String html = &quot;&lt;!DOCTYPE html&gt;&quot; + &quot;&lt;html lang=\&quot;zh-cn\&quot;&gt;&quot; +                    &quot;&lt;head&gt;&quot; + &quot; &lt;title&gt;QQ登录重定向页&lt;/title&gt;&quot; + &quot; &lt;meta charset=\&quot;utf-8\&quot;/&gt;&quot; + &quot;&lt;/head&gt;&quot; + &quot;&lt;body&gt;&quot; + &quot; &lt;script type=\&quot;text/javascript\&quot;&gt;&quot; + &quot; location.href = location.href.replace('#', '&amp;').replace('auth_qq', 'auth_qq_redirect');&quot; +            &quot;   &lt;/script&gt;&quot; + &quot;&lt;/body&gt;&quot; + &quot;&lt;ml&gt;&quot;;
+response.getWriter().print(html);
+}
+</code></pre>
+
+<p><strong>3.5 获取openId</strong></p>
+
+<p>根据accessToken调接口获取用户的openId，特别注意这个openId是相对于QQ号+appId唯一的，换句话说同一个QQ号登录2个不同appId时获取到的openId是不同的。顺便说一句，QQ登录的相关接口做的还真够“随便”的，全部都是最简单的get请求，所以对接起来非常顺利。 微信搜索 Web项目聚集地 获取更多实战教程。</p>
+
+<p>直接看代码：</p>
+
+<pre><code class="language-java">// 根据accessToken换取openId
+// 错误示例：callback( {&quot;error&quot;:100016,&quot;error_description&quot;:&quot;access token check failed&quot;} );
+// 正确示例：callback( {&quot;client_id&quot;:&quot;10XXXXX49&quot;,&quot;openid&quot;:&quot;CF2XXXXXXXX9F4C&quot;} );
+String result = HttpsUtil.get(&quot;https://graph.qq.com/oauth2.0/me?access_token=&quot; + accessToken);
+Map&lt;String, Object&gt; resp = parseQQAuthResponse(result); // 这个方法就是把结果转Map
+Integer errorCode = (Integer)resp.get(&quot;error&quot;);
+String errorMsg = (String)resp.get(&quot;error_description&quot;);
+String openId = (String)resp.get(&quot;openid&quot;);
+if(errorCode != null) 
+return new ErrorResult(errorCode, &quot;获取QQ用户openId失败：&quot;+errorMsg);
+</code></pre>
+
+<p><strong>3.6 获取用户头像昵称等信息</strong></p>
+
+<pre><code>// 获取用户昵称、头像等信息，{ret: 0, msg: '', nickname: '', ...} ret不为0表示失败
+result = HttpsUtil.get(&quot;https://graph.qq.com/user/get_user_info?access_token=&quot;+accessToken+&quot;&amp;oauth_consumer_key=&quot;+appId+&quot;&amp;openid=&quot;+openId);
+resp = JsonUtil.parseJsonToMap(result);// 欢迎关注 Web项目聚集地 获取更多实战教程
+Integer ret = (Integer)resp.get(&quot;ret&quot;);
+String msg = (String)resp.get(&quot;msg&quot;);
+if(ret != 0) return new ErrorResult(&quot;获取用户QQ信息失败：&quot;+msg);// 用户昵称可能存在4个字节的utf-8字符，MySQL默认不支持，直接插入会报错，所以过滤掉
+String nickname = StringUtil.filterUtf8Mb4((String)resp.get(&quot;nickname&quot;)).trim(); // 这个方法可以自行百度
+// figureurl_qq_2=QQ的100*100头像，figureurl_2=QQ 100&amp;100空间头像，QQ头像不一定有，空间头像一定有
+String avatar = (String)resp.get(&quot;figureurl_qq_2&quot;);
+if(StringUtil.isBlank(avatar)) avatar = (String)resp.get(&quot;figureurl_2&quot;);
+String gender = (String)resp.get(&quot;gender&quot;);
+</code></pre>
+
+<p><strong>3.7 注意事项</strong></p>
+
+<p>到了这一步基本上涉及第三方的就结束了，是不是很简单？后面无非就是如何插入数据库、如何保存token、写入session等。</p>
+
+<p>有几点注意事项：</p>
+
+<p>需要注意数据库中是否已经有改用户，没有的添加，有的修改，不要重复添加了；QQ昵称昵称有各种奇奇怪怪的字符，包括emoji，MySQL默认没有开启utf8mb4，直接插入会报错，所以需要过滤掉；需要做好对各种错误的兼容；接口会同时返回QQ头像和空间头像，QQ头像不一定有，空间头像一定有；回调地址必须和申请的域名一致，否则会报错。QQ互联有个特大的bug，有时候显示已登录但是点击授权管理一直报错，此时只需要退出重新登录即可；授权之后用户可能会在过期之前提前取消授权；微信搜索 Web项目聚集地 获取更多实战教程。</p>
+
+<p>相关文档官网已经写得比较细了，但是比较乱：<a href="http://wiki.connect.qq.com/" rel="nofollow noreferrer" target="_blank">http://wiki.connect.qq.com/</a></p>
+
+<p><strong>4 对接微博登录</strong></p>
+
+<p><strong>4.1 实名认证</strong></p>
+
+<p>这个我就不具体讲了，登录 <a href="http://open.weibo.com/" rel="nofollow noreferrer" target="_blank">http://open.weibo.com/</a> 很容易找到相关入口，注册成为开发者，实名认证，一模一样的。</p>
+
+<p><strong>4.2 创建应用</strong></p>
+
+<p>点击链接</p>
+
+<p><a href="http://open.weibo.com/apps/new?sort=web" rel="nofollow noreferrer" target="_blank">http://open.weibo.com/apps/new?sort=web</a></p>
+
+<p>创建web应用：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdydsTF7nPGMURjcY5JO6QtdzI0Ria7INY5U4hKwBcAmyqCRFtUr828phA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>创建成果后完善相关信息，主要是下面这些：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_png/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyXoUxsrAia3uiankIokic3D9Jice2icz9LknSZIu1Mv62jhAAyuhibRFxDJAg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p>我就不一一介绍了，都看得懂。</p>
+
+<p>微博登录不需要网站一定要备案，但对网站本身有一定要求，不能弄一个空壳网站让人家去审核，肯定审核不通过的。</p>
+
+<p>有关微博的对接可以参考我好几年前写的一篇文章：</p>
+
+<p><a href="http://www.cnblogs.com/liuxianan/archive/2012/11/11/2765123.html" rel="nofollow noreferrer" target="_blank">http://www.cnblogs.com/liuxianan/archive/2012/11/11/2765123.html</a></p>
+
+<p><strong>4.3 引导用户登录</strong></p>
+
+<p>微博视觉素材</p>
+
+<p>（<a href="https://open.weibo.com/wiki/微博标识下载）" rel="nofollow noreferrer" target="_blank">https://open.weibo.com/wiki/微博标识下载）</a></p>
+
+<p>下载在这里，页面合适位置放一个登录按钮：</p>
+
+<pre><code>function weiboLogin(){    let weiboAppId = '432432';    
+let weiboAuthPath = 'http://www.test.com/authweibo';    
+openWindow(`https://api.weibo.com/oauth2/authorize?client_id=${weiboAppId}&amp;response_type=code&amp;redirect_uri=${encodeURIComponent(weiboAuthPath)}`);
+}
+</code></pre>
+
+<p>微博登录有一个好处，第一次登录需要授权，后面第二次登录时只会一闪而过自动就登录成功了，都不需要点一下，用户体验非常好，看下图：</p>
+
+<p><figure><img src="/images/ring.svg" data-sizes="auto" data-src="https://mmbiz.qpic.cn/mmbiz_gif/KLTiaLuJImEJtjQnxVY0LvicfCaFn2sGdyjEEOdKsnbZoXDcfibx5sZXOIS35FJuVAN31r0wQb6pIYlapLHbeCwUw/640?wx_fmt=gif&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" alt="img" class="lazyload"><figcaption class="image-caption">img</figcaption></figure></p>
+
+<p><strong>4.4 获取accessToken</strong></p>
+
+<p>登录成功会返回一个code，根据code换取accessToken：</p>
+
+<pre><code class="language-java">String params = &quot;client_id=&quot; + appId + &quot;&amp;client_secret=&quot; + appSecret + &quot;&amp;grant_type=authorization_code&quot; + &quot;&amp;redirect_uri=&quot; + URLUtil.encode(authPath) + &quot;&amp;code=&quot; + code;// 用code换取accessTokenString 
+result = HttpsUtil.post(&quot;https://api.weibo.com/oauth2/access_token&quot;, params);
+Map&lt;String, Object&gt; resp = JsonUtil.toObject(result, new TypeReference&lt;Map&lt;String, Object&gt;&gt;(){});
+Integer errorCode = (Integer)resp.get(&quot;error_code&quot;);
+String error = (String)resp.get(&quot;error&quot;);
+String errorMsg = (String)resp.get(&quot;error_description&quot;);
+if(errorCode != null &amp;&amp; errorCode != 0) 
+return new ErrorResult(errorCode, error + (errorMsg==null?&quot;&quot;:errorMsg));
+String accessToken = (String)resp.get(&quot;access_token&quot;);
+String uid = (String)resp.get(&quot;uid&quot;); // 这个uid就是微博用户的唯一用户ID，可以通过这个id直接访问到用户微博主页
+int expires = (Integer)resp.get(&quot;expires_in&quot;); // 有效期，单位秒
+</code></pre>
+
+<p><strong>4.5. 获取用户头像等信息</strong></p>
+
+<pre><code class="language-java">// 用uid和accessToken换取用户信息String result = 
+HttpsUtil.get(&quot;https://api.weibo.com/2/users/show.json?access_token=&quot;+accessToken+&quot;&amp;uid=&quot;+uid);Map&lt;String, Object&gt; resp = JsonUtil.toObject(result, new TypeReference&lt;Map&lt;String, Object&gt;&gt;(){});
+errorCode = (Integer)resp.get(&quot;error_code&quot;);
+error = (String)resp.get(&quot;error&quot;);
+errorMsg = (String)resp.get(&quot;error_description&quot;);
+if(errorCode != null &amp;&amp; errorCode != 0) return new ErrorResult(errorCode, error + (errorMsg==null?&quot;&quot;:errorMsg));String nickname = (String)resp.get(&quot;screen_name&quot;);// 微博180*180高清头像String avatar = (String)resp.get(&quot;avatar_large&quot;);
+String gender = (String)resp.get(&quot;gender&quot;);
+gender = &quot;m&quot;.equals(gender) ? &quot;男&quot; : (&quot;f&quot;.equals(gender) ? &quot;女&quot; : &quot;&quot;);
+</code></pre>
+
+<p>至此涉及第三方的东西都完了，剩下的就是用户自己保存到数据库、写入token</p>
+
+<p>保存 session 以及鉴权接口开发了。</p>
+
+<p><strong>4.6 注意事项</strong></p>
+
+<pre><code>微博接口都有频率限制，不过一般不会超过；需做好错误兼容；微博直接返回的uid，可以根据这个uid直达用户微博主页 https://weibo.com/u/xxxxx ，所以可以把用户头像链接到这里；其实也有现成的js-sdk，可以根据自己实际需要选择是否使用；微博的接口是https，并且是post，需要注意；
+</code></pre>
+
+<p><strong>5 相关链接</strong></p>
+
+<pre><code>微博开放平台：open.weibo.com/微博登录授权机制：open.weibo.com/wiki/授权机制QQ互联：connect.qq.com/QQ授权管理页面：connect.qq.com/manage.html#/appauth/user
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>王建伟 </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/>https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/%E6%8E%A5%E5%8F%A3%E5%9B%9E%E8%B0%83/">
+                    #接口回调</a></span>
+            
+            <span class="tag"><a href="https://wjw66.github.io/tags/qq%E5%BE%AE%E5%8D%9A%E6%8E%88%E6%9D%83%E7%99%BB%E5%BD%95/">
+                    #QQ、微博授权登录</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://wjw66.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://wjw66.github.io/2019/springboot%E9%85%8D%E7%BD%AEapplication.yml%E8%AF%A6%E8%A7%A3/" class="prev" rel="prev" title="SpringBoot配置application.yml"><i class="iconfont icon-left"></i>&nbsp;SpringBoot配置application.yml</a>
+         
+        
+        <a href="https://wjw66.github.io/2019/logback/" class="next" rel="next" title="logback 简介">logback 简介&nbsp;<i class="iconfont icon-right"></i></a>
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://wjw66.github.io/">王建伟</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

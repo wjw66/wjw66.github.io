@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>日志使用 on 首页</title>
+    <link>https://wjw66.github.io/categories/%E6%97%A5%E5%BF%97%E4%BD%BF%E7%94%A8/</link>
+    <description>Recent content in 日志使用 on 首页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wjw66.github.io/categories/%E6%97%A5%E5%BF%97%E4%BD%BF%E7%94%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>logback 简介</title>
+      <link>https://wjw66.github.io/2019/logback/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://wjw66.github.io/2019/logback/</guid>
+      <description>logback 简介  logback 官网：https://logback.qos.ch/
+ 目前还没有看过日志类框架的源码，仅限于如何使用。所以就不说那些“空话”了。最直观的认知是：
+ logback和log4j是一个人写的 springboot默认使用的日志框架是logback。 三个模块组成 logback-core logback-classic logback-access  其他的关于性能，关于内存占用，关于测试，关于文档详见源码及官网说明
+logback-core 是其它模块的基础设施，其它模块基于它构建，显然，logback-core 提供了一些关键的通用机制。logback-classic 的地位和作用等同于 Log4J，它也被认为是 Log4J 的一个改进版，并且它实现了简单日志门面 SLF4J；而 logback-access 主要作为一个与 Servlet 容器交互的模块，比如说tomcat或者 jetty，提供一些与 HTTP 访问相关的功能。
+配置文件详解 这部分主要来学习下logback配置文件的一些配置项。
+configuration 先来看这张图，这个结构就是整个logback.xml配置文件的结构。
+对应来看下配置文件：
+&amp;lt;configuration scan=&amp;quot;true&amp;quot; scanPeriod=&amp;quot;60 seconds&amp;quot; debug=&amp;quot;false&amp;quot;&amp;gt; &amp;lt;property name=&amp;quot;glmapper-name&amp;quot; value=&amp;quot;glmapper-demo&amp;quot; /&amp;gt; &amp;lt;contextName&amp;gt;${glmapper-name}&amp;lt;/contextName&amp;gt; &amp;lt;appender&amp;gt; //xxxx &amp;lt;/appender&amp;gt; &amp;lt;logger&amp;gt; //xxxx &amp;lt;/logger&amp;gt; &amp;lt;root&amp;gt; //xxxx &amp;lt;/root&amp;gt; &amp;lt;/configuration&amp;gt;   ps：想使用spring扩展profile支持，要以logback-spring.xml命名，其他如property需要改为springProperty
+  scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。  contextName 每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用contextName标签设置成其他名字，用于区分不同应用程序的记录
+property 用来定义变量值的标签，property标签有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。通过property定义的值会被插入到logger上下文中。定义变量后，可以使“${name}”来使用变量。如上面的xml所示。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>QQ、微博授权登录 on 首页</title>
+    <link>https://wjw66.github.io/tags/qq%E5%BE%AE%E5%8D%9A%E6%8E%88%E6%9D%83%E7%99%BB%E5%BD%95/</link>
+    <description>Recent content in QQ、微博授权登录 on 首页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 14 Oct 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://wjw66.github.io/tags/qq%E5%BE%AE%E5%8D%9A%E6%8E%88%E6%9D%83%E7%99%BB%E5%BD%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>QQ、微博授权登录</title>
+      <link>https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/</link>
+      <pubDate>Mon, 14 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://wjw66.github.io/2019/qq%E5%BE%AE%E5%8D%9A%E5%BE%AE%E4%BF%A1%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8/</guid>
+      <description>QQ、微博授权登录 1 前言
+个人网站最近增加了评论功能，为了方便用户不用注册就可以评论，对接了 QQ 和微博这 2 大常用软件的一键登录，总的来说其实都挺简单的，可能会有一点小坑，但不算多，完整记录下来方便后来人快速对接。
+2 后台设计
+在真正开始对接之前，我们先来聊一聊后台的方案设计。既然是对接第三方登录，那就免不了如何将用户信息保存。首先需要明确一点的是，用户在第三方登录成功之后，我们能拿到的仅仅是一个代表用户唯一身份的ID（微博是真实uid，QQ是加密的openId）以及用来识别身份的accessToken，当然还有昵称、头像、性别等有限资料，对接第三方登录的关键就是如何确定用户是合法登录，如果确定这次登录的和上次登录的是同一个人并且不是假冒的。
+其实这个并不用我们特别操心，就以微博登录为例，用户登录成功之后会回调一个code 给我们，然后我们再拿code去微博那换取accessToken，如果这个code是用户乱填的，那这一关肯定过不了，所以，前面的担心有点多余。
+另外一个问题就是如何和现有用户系统打通，有的网站在用户已经登录成功之后还要用户输入手机号和验证码，或者要用户重新注册账号和密码来绑定第三方账户，感觉这种实现用户体验非常差，碰到这种网站我一般都是直接关掉，都已经登录了还让用户注册，什么鬼！由于我做的是评论功能，我并不希望评论用户和现有用户表打通，所以就不存在这件事了，如果想打通的话，我觉得无非就是登录成功之后默认往老用户表插入一条数据，然后和OpenUser表关联起来，判断用户是否登录时把OpenUser的鉴权也加进去就OK了。
+本文的后台以Java为例。
+2.1 数据库设计
+再来说说数据库设计，为了系统的扩展性，我有一个专门的OpenUser表用来存放第三方登录用户，主要字段如下：
+这样设计理论上就可以无限扩展了。
+2.2 鉴权流程
+这里我只是说说我的方案，把accessToken写入cookie肯定是不安全的，因为accessToken相当于是第三方网站的临时密码，被别人窃取了就可以随意拿来干坏事了。可以在用户登录成功之后我们自己生成一个token，这样的token即使泄露了顶多就是被人拿来随意评论，损失不大，但是如果accessToken被泄露了，以微博为例，人家可以利用这个accessToken随意发微博、删微博、加关注等等，很危险。当然，如果不想token泄露的话也可以通过绑定IP等方式来限制。
+鉴权的话就是首先判断cookie中是否有我们自己的token，然后判断是否合法，合法再判断第三方授权是否已过期等等。
+3 QQ登录
+3.1 实名认证
+QQ登录我们对接的是QQ互联，地址：https://connect.qq.com ,首先需要注册成为开发者并实名认证，需要手持身份证照片，具体就不讲了。
+3.2 创建应用
+进入应用管理页面(https://connect.qq.com/manage.html#/)创建应用，根据实际需要是创建网站应用还是移动应用，我这里是网站应用：
+第一步：
+第二步：
+提交完之后会自动提交审核，基本上就是审核你的资料和备案的资料是否一致，所有资料必须和备案资料一模一样，否则审核不会通过：
+当然，这些资料后面还是可以修改的。申请成功之后你会得到appId和appKey。
+3.3. 引导用户登录
+这里可以下载一些视觉素材，在页面合适位置放一个QQ登录按钮，点击时引导用户进入授权页面：
+代码：
+function openWindow(url, width, height){ width = width || 600; height = height || 400; var left = (window.screen.width - width) / 2; var top = (window.screen.height - height) / 2; window.</description>
+    </item>
+    
+  </channel>
+</rss>
